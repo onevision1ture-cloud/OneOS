@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OneTasks — Onevision OS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+
+<div id="page-content">
+  <div class="page-head">
+    <div>
+      <h1>One<em>Tasks</em></h1>
+      <p>O quadro rei da Onevision — todos os quadros da empresa e da equipe, num só lugar.</p>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn btn-primary" id="newBoardBtn">+ Novo quadro</button>
+    </div>
+  </div>
+
+  <div class="board-shell">
+    <div class="board-rail" id="boardRail"></div>
+    <div class="board-main" id="boardMain"></div>
+    <div class="board-chat" id="boardChat"></div>
+  </div>
+</div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/dragdrop.js"></script>
+<script src="assets/js/shell.js"></script>
+<script src="assets/js/pages/tarefas.js"></script>
+</body>
+</html>

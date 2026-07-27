@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financeiro — Onevision OS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  .fin-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0;border-top:1px solid var(--line);}
+  .fin-row:first-child{border-top:none;}
+  .fin-row .f-value{font-family:'Instrument Serif',serif;font-style:italic;font-size:17px;}
+  .fin-row .f-value.receita{color:var(--success);}
+  .fin-row .f-value.despesa{color:var(--danger);}
+</style>
+</head>
+<body>
+
+<div id="page-content">
+  <div class="page-head">
+    <div>
+      <h1>Financeiro da <em>Onevision</em></h1>
+      <p>Receitas, despesas da empresa e folha de pagamento da equipe.</p>
+    </div>
+  </div>
+
+  <div class="tabs" id="finTabs">
+    <button class="tab-btn active" data-tab="empresa">Empresa</button>
+    <button class="tab-btn" data-tab="equipe">Funcionários</button>
+  </div>
+
+  <div id="finEmpresa">
+    <div class="kpi-grid" id="empresaKpis"></div>
+    <div class="panel">
+      <div class="panel-head"><h3>Lançamentos</h3><button class="btn btn-primary btn-sm" id="addCompanyBtn">+ Novo lançamento</button></div>
+      <div id="companyList"></div>
+    </div>
+  </div>
+
+  <div id="finEquipe" class="hidden">
+    <div class="kpi-grid" id="payrollKpis"></div>
+    <div class="panel">
+      <div class="panel-head"><h3>Folha de pagamento</h3><button class="btn btn-primary btn-sm" id="addPayrollBtn">+ Adicionar</button></div>
+      <div id="payrollList"></div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/dragdrop.js"></script>
+<script src="assets/js/shell.js"></script>
+<script src="assets/js/pages/financeiro.js"></script>
+</body>
+</html>

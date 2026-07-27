@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Início — Onevision OS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  .home-hero{background:linear-gradient(155deg,#221A16,#120D0B 70%);border-radius:26px;padding:36px 34px;color:var(--cream);position:relative;overflow:hidden;margin-bottom:28px;}
+  .home-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 0%, rgba(140,29,44,.5), transparent 55%);}
+  .home-hero > *{position:relative;z-index:1;}
+  .home-hero h1{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;font-size:clamp(24px,3vw,32px);}
+  .home-hero p{color:rgba(250,246,239,.7);margin-top:8px;font-size:14px;max-width:480px;}
+  .home-quick{display:flex;gap:22px;margin-top:22px;flex-wrap:wrap;}
+  .home-quick div strong{font-family:'Instrument Serif',serif;font-size:26px;color:#F3D9DC;display:block;}
+  .home-quick div span{font-family:'Space Grotesk',sans-serif;font-size:11px;color:rgba(250,246,239,.55);text-transform:uppercase;letter-spacing:.05em;}
+  .update-card{display:flex;gap:16px;padding:18px 4px;border-top:1px solid var(--line);}
+  .update-card:first-child{border-top:none;}
+  .update-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;}
+  .update-title-row{display:flex;align-items:center;gap:10px;margin-bottom:4px;flex-wrap:wrap;}
+  .update-title-row b{font-family:'Space Grotesk',sans-serif;font-size:14.5px;}
+  .update-body{font-size:13.5px;color:var(--ink-2);line-height:1.6;}
+  .update-date{font-size:11.5px;color:var(--ink-3);margin-top:6px;}
+  .home-foot{margin-top:40px;padding:26px 0 10px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .home-foot p{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--ink-3);}
+  .home-foot .foot-btns{display:flex;gap:10px;}
+</style>
+</head>
+<body>
+
+<div id="page-content">
+  <div class="home-hero reveal is-visible">
+    <h1>Bem-vindo(a) de volta, <span id="homeUserName">—</span>.</h1>
+    <p>Aqui vão as novidades, avisos e atualizações do sistema. Sua operação em um relance, antes de entrar nos detalhes.</p>
+    <div class="home-quick" id="homeQuickStats"></div>
+  </div>
+
+  <div class="page-head">
+    <div>
+      <h1>Central de <em>comunicados</em></h1>
+      <p>Tudo que a equipe precisa saber, em ordem cronológica.</p>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn btn-primary hidden" id="newUpdateBtn">+ Novo comunicado</button>
+    </div>
+  </div>
+
+  <div class="tabs" id="updateTabs">
+    <button class="tab-btn active" data-filter="todos">Todos</button>
+    <button class="tab-btn" data-filter="novidade">Novidades</button>
+    <button class="tab-btn" data-filter="atualização">Atualizações</button>
+    <button class="tab-btn" data-filter="aviso">Avisos</button>
+  </div>
+
+  <div class="panel" id="updatesPanel"></div>
+
+  <div class="home-foot">
+    <p>© <span id="homeYear"></span> Onevision1ture. Created by Gabriel Tobar.</p>
+    <div class="foot-btns">
+      <a href="onevision-site/index.html" target="_blank" rel="noopener" class="btn btn-soft btn-sm">Site Onevision</a>
+      <a href="sobre-onevisionos.html" class="btn btn-soft btn-sm">Site OnevisionOS</a>
+    </div>
+  </div>
+</div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/dragdrop.js"></script>
+<script src="assets/js/shell.js"></script>
+<script src="assets/js/pages/home.js"></script>
+</body>
+</html>

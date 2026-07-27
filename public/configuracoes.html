@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Configurações — Onevision OS</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+<style>
+  .settings-section{margin-bottom:20px;}
+  .settings-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid var(--line);}
+  .settings-row:first-child{border-top:none;}
+  .settings-row .sr-label{font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;}
+  .settings-row .sr-hint{font-size:12px;color:var(--ink-3);margin-top:2px;max-width:420px;}
+  .theme-btns, .lang-btns{display:flex;gap:8px;}
+  .theme-btns button, .lang-btns button{padding:8px 16px;border-radius:999px;border:1px solid var(--line-strong);font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;}
+  .theme-btns button.active, .lang-btns button.active{background:var(--wine);color:#fff;border-color:var(--wine);}
+  .faq-details{border-top:1px solid var(--line);padding:14px 0;}
+  .faq-details:first-child{border-top:none;}
+  .faq-details summary{cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;list-style:none;}
+  .faq-details summary::-webkit-details-marker{display:none;}
+  .faq-details summary::before{content:'+ ';color:var(--wine);}
+  .faq-details[open] summary::before{content:'– ';}
+  .faq-details p{margin-top:10px;font-size:13.5px;color:var(--ink-2);line-height:1.7;}
+  .settings-foot{margin-top:36px;padding:22px 0 10px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .settings-foot p{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--ink-3);}
+</style>
+</head>
+<body>
+
+<div id="page-content">
+  <div class="page-head">
+    <div>
+      <h1>Configurações do <em>sistema</em></h1>
+      <p>Aparência, idioma, notificações, convites e ajuda — tudo num lugar só.</p>
+    </div>
+  </div>
+
+  <div class="settings-section panel">
+    <div class="panel-head"><h3>Aparência</h3></div>
+    <div class="settings-row">
+      <div><div class="sr-label" data-i18n="settings.theme"></div><div class="sr-hint">Escolha entre o tema claro e o escuro.</div></div>
+      <div class="theme-btns">
+        <button data-theme-btn="light" data-i18n="settings.light"></button>
+        <button data-theme-btn="dark" data-i18n="settings.dark"></button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div><div class="sr-label" data-i18n="settings.language"></div><div class="sr-hint">Muda os textos da barra lateral, topo, login e desta página.</div></div>
+      <div class="lang-btns">
+        <button data-lang-btn="pt">Português</button>
+        <button data-lang-btn="en">English</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-section panel">
+    <div class="panel-head"><h3 data-i18n="settings.notifications"></h3>
+      <div class="flex gap-8">
+        <button class="btn btn-soft btn-sm" id="markAllReadBtn">Marcar tudo como lido</button>
+        <button class="btn btn-ghost btn-sm" id="clearAllBtn">Limpar tudo</button>
+      </div>
+    </div>
+    <div class="settings-row">
+      <div><div class="sr-label">Eventos & reuniões</div><div class="sr-hint">Mostra avisos de eventos e reuniões próximas no sino do sistema.</div></div>
+      <label class="toggle"><input type="checkbox" id="notifEventos"><span class="track"></span><span class="thumb"></span></label>
+    </div>
+    <div class="settings-row">
+      <div><div class="sr-label">Tarefas (OneTasks)</div><div class="sr-hint">Em breve: avisos de tarefas atribuídas a você.</div></div>
+      <label class="toggle"><input type="checkbox" id="notifTarefas"><span class="track"></span><span class="thumb"></span></label>
+    </div>
+    <div class="settings-row">
+      <div><div class="sr-label">Menções no chat</div><div class="sr-hint">Em breve: avisos quando alguém te mencionar no chat de um quadro.</div></div>
+      <label class="toggle"><input type="checkbox" id="notifMencoes"><span class="track"></span><span class="thumb"></span></label>
+    </div>
+  </div>
+
+  <div class="settings-section panel">
+    <div class="panel-head"><h3 data-i18n="settings.invites"></h3></div>
+    <div class="field-row" style="align-items:flex-end;margin-bottom:14px;">
+      <div class="field"><label>Nome da pessoa</label><input type="text" id="cfgInviteName" placeholder="Ex: Fernanda Lopes"></div>
+      <button class="btn btn-primary" id="cfgGenerateInviteBtn" style="height:44px;">Gerar convite</button>
+    </div>
+    <div id="cfgInvitesList"></div>
+  </div>
+
+  <div class="settings-section panel">
+    <div class="panel-head"><h3>Sobre o sistema</h3></div>
+    <p class="text-muted text-sm" style="margin-bottom:14px;">Onevision OS — sistema interno de organização e CRM da Onevision. Versão 1.0. Backend em Node.js + Express, dados em PostgreSQL, sessão autenticada por cookie seguro.</p>
+    <div class="kpi-grid" id="aboutStats"></div>
+  </div>
+
+  <div class="settings-section panel">
+    <div class="panel-head"><h3 data-i18n="settings.help"></h3></div>
+    <details class="faq-details" open>
+      <summary>O que é o Onevision OS?</summary>
+      <p>É o sistema privado de organização da agência: CRM, tarefas (OneTasks), campanhas, planejamento de conteúdo, financeiro, contratos e arquivos — tudo integrado, sem depender de planilhas soltas.</p>
+    </details>
+    <details class="faq-details">
+      <summary>Como funciona o acesso?</summary>
+      <p>Não existe criação de conta pública. O acesso é sempre liberado por um administrador (aprovando uma solicitação de acesso) ou por convite direto — um link único, válido por 7 dias, com o nome da pessoa convidada.</p>
+    </details>
+    <details class="faq-details">
+      <summary>Meus dados estão seguros?</summary>
+      <p>A sessão de login é guardada num cookie seguro e assinado no servidor — nunca no navegador em texto puro. Todos os dados do sistema (clientes, tarefas, CRM etc.) ficam num banco de dados PostgreSQL privado, acessível só pela própria aplicação.</p>
+    </details>
+    <details class="faq-details">
+      <summary>Como funciona a verificação de perfil?</summary>
+      <p>O selo de "verificado" em um perfil é controlado pelos administradores em Equipe → Editar perfil. Ele indica que aquele acesso foi conferido manualmente pela administração da Onevision.</p>
+    </details>
+    <details class="faq-details">
+      <summary>Como conecto o Meta Ads de verdade?</summary>
+      <p>Em Meta Ads, o botão "Conectar com o Meta" vai iniciar a autenticação oficial com o Meta Business quando essa integração for habilitada pela equipe técnica. Até lá, os dados são inseridos manualmente.</p>
+    </details>
+    <details class="faq-details">
+      <summary>Privacidade</summary>
+      <p>As informações cadastradas aqui são de uso exclusivo da equipe Onevision e dos clientes atendidos. Nenhum dado é compartilhado com terceiros ou usado para fins fora da operação da agência.</p>
+    </details>
+  </div>
+
+  <div class="settings-foot">
+    <p>© <span id="cfgYear"></span> Onevision1ture. Created by Gabriel Tobar.</p>
+    <div class="flex gap-8">
+      <a href="onevision-site/index.html" target="_blank" rel="noopener" class="btn btn-soft btn-sm">Site Onevision</a>
+      <a href="sobre-onevisionos.html" class="btn btn-soft btn-sm">Site OnevisionOS</a>
+    </div>
+  </div>
+</div>
+
+<script src="assets/js/store.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script src="assets/js/dragdrop.js"></script>
+<script src="assets/js/shell.js"></script>
+<script src="assets/js/pages/configuracoes.js"></script>
+</body>
+</html>

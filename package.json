@@ -1,0 +1,22 @@
+{
+  "name": "onevision-os",
+  "version": "1.0.0",
+  "description": "Onevision OS — sistema interno de organização e CRM da Onevision (agência de marketing).",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js"
+  },
+  "dependencies": {
+    "connect-pg-simple": "^9.0.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "pg": "^8.12.0"
+  }
+}

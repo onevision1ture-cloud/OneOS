@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onevision OS — Login</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+<div class="grain"></div>
+
+<div class="auth-shell">
+  <div class="auth-side">
+    <a href="home.html" class="logo" style="pointer-events:none;">
+      <span class="logo-mark">O</span>
+      <span class="logo-text"><span class="top">One<span class="vision">vision</span></span><span class="tag">Sistema OS</span></span>
+    </a>
+
+    <div class="auth-orbit-wrap">
+      <div class="auth-orbit" style="width:320px;height:320px;"></div>
+      <div class="auth-orbit" style="width:230px;height:230px;animation-direction:reverse;animation-duration:40s;border-style:dashed;"></div>
+      <div class="auth-badge">
+        <span class="bt">One<span class="v">vision</span></span>
+        <span class="bs">OS</span>
+      </div>
+    </div>
+
+    <div class="auth-side-copy">
+      <h2 class="serif">O time de marketing organizado <em style="color:var(--wine-glow);">num só lugar</em>.</h2>
+      <p>CRM, tarefas, campanhas, conteúdo e financeiro da Onevision — tudo dentro de um sistema privado, feito sob medida para a nossa operação.</p>
+      <button class="learn-more-btn" id="learnMoreBtn">
+        <span data-i18n="login.learnMore"></span>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="auth-form-side">
+    <div class="auth-form-wrap">
+      <div class="auth-private-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10" width="15" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        <span data-i18n="login.private"></span>
+      </div>
+
+      <div id="inviteBanner" class="invite-banner hidden"></div>
+      <div id="loginErrorBanner" class="hidden" style="background:var(--danger-bg);color:var(--danger);border:1px solid rgba(176,38,58,.25);border-radius:14px;padding:13px 16px;margin-bottom:20px;font-family:'Space Grotesk',sans-serif;font-size:13px;"></div>
+
+      <h1><span data-i18n="login.title1"></span> <em data-i18n="login.title2"></em></h1>
+      <p class="sub" data-i18n="login.subtitle"></p>
+
+      <button class="google-btn" id="googleBtn">
+        <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.1 0-11-4.9-11-11s4.9-11 11-11c2.8 0 5.3 1 7.3 2.7l6-6C33.6 6.5 29 4.5 24 4.5 12.9 4.5 4 13.4 4 24.5s8.9 20 20 20c11.1 0 20-8.9 20-20 0-1.3-.1-2.7-.4-4z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c2.8 0 5.3 1 7.3 2.7l6-6C33.6 6.5 29 4.5 24 4.5c-7.7 0-14.3 4.4-17.7 10.2z"/><path fill="#4CAF50" d="M24 44.5c5.2 0 9.9-1.8 13.4-4.9l-6.2-5.2C29.3 36 26.8 37 24 37c-5.2 0-9.6-2.6-11.3-7l-6.5 5C9.6 40 16.2 44.5 24 44.5z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.6l6.2 5.2C39.7 37 44 31.4 44 24.5c0-1.3-.1-2.7-.4-4z"/></svg>
+        <span data-i18n="login.google"></span>
+      </button>
+
+      <div class="auth-divider"><span data-i18n="login.or"></span></div>
+
+      <form id="emailLoginForm" class="field-col" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="field">
+          <label data-i18n="login.emailLabel"></label>
+          <input type="email" id="loginEmail" placeholder="voce@onevision1ture.com" autocomplete="email" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="login.enter"></button>
+      </form>
+
+      <div style="margin-top:22px;">
+        <p class="field-hint" style="margin-bottom:10px;">Acesso rápido — equipe já aprovada:</p>
+        <div id="quickTeamRow" style="display:flex;gap:8px;"></div>
+      </div>
+
+      <div class="auth-links-row">
+        <span class="text-faint" data-i18n="login.noAccount"></span>
+        <button class="btn-link" id="requestAccessBtn" style="color:var(--wine);font-weight:600;font-family:'Space Grotesk',sans-serif;" data-i18n="login.request"></button>
+      </div>
+      <p class="auth-foot-note" data-i18n="login.hasAccess"></p>
+    </div>
+  </div>
+</div>
+
+<div class="boot-screen hidden" id="bootScreen">
+  <div class="boot-orbit-wrap">
+    <div class="boot-orbit o1"></div>
+    <div class="boot-orbit o2"></div>
+    <div class="boot-mark">O</div>
+  </div>
+  <div class="boot-text">One<span class="v">vision</span> OS</div>
+  <div class="boot-sub" id="bootSubText">Preparando seu painel…</div>
+  <div class="boot-bar"><b id="bootBar"></b></div>
+</div>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/i18n.js"></script>
+<script>
+(async function(){
+  I18n.apply(document);
+
+  await Store.preload(['session','config']);
+  if(Store.get('session').loggedIn){ location.href = 'home.html'; return; }
+
+  const errBanner = document.getElementById('loginErrorBanner');
+  function showError(msg){ errBanner.classList.remove('hidden'); errBanner.textContent = msg; }
+  function hideError(){ errBanner.classList.add('hidden'); }
+
+  // ---------- Convite via link ----------
+  const params = new URLSearchParams(location.search);
+  const inviteToken = params.get('invite') || '';
+  if(inviteToken){
+    const inv = await Store.fetchInviteByToken(inviteToken);
+    if(inv && Store.inviteStatus(inv) === 'pendente'){
+      const banner = document.getElementById('inviteBanner');
+      banner.classList.remove('hidden');
+      banner.innerHTML = `🎉 Parabéns, <b>${Util.escapeHtml(inv.forName)}</b>! Seu convite é válido — é só entrar com seu e-mail ou Google abaixo.`;
+    } else if(inv){
+      Util.toast('Este link de convite expirou ou já foi usado.');
+    }
+  }
+
+  // ---------- Erro vindo do fluxo de Google (redirect do servidor) ----------
+  if(params.get('googleError')){
+    showError(`A conta Google ${params.get('email')||''} não tem acesso liberado. Solicite acesso abaixo.`);
+  }
+
+  // ---------- Acesso rápido (equipe já aprovada) ----------
+  function avatarHtml(u){
+    return `<div class="avatar avatar-md" style="width:100%;height:100%;background-image:${u.photo?`url('${u.photo}')`:'none'};background:${u.photo?`url('${u.photo}') center/cover`:`linear-gradient(140deg, ${u.color||'#6E1220'}, #2b0812)`};">${u.photo?'':Util.initials(u.name)}</div>`;
+  }
+  const team = await Store.fetchTeamPicker();
+  const quickRow = document.getElementById('quickTeamRow');
+  team.forEach(u => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-icon';
+    btn.style.cssText = 'width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--line-strong);transition:border-color .2s;';
+    btn.title = u.name;
+    btn.innerHTML = avatarHtml(u);
+    btn.addEventListener('mouseenter', () => btn.style.borderColor = 'var(--wine)');
+    btn.addEventListener('mouseleave', () => btn.style.borderColor = 'var(--line-strong)');
+    btn.addEventListener('click', async () => {
+      try{ await Store.loginUser(u.id, inviteToken); bootAndRedirect(); }
+      catch(e){ showError('Não foi possível entrar. Tente novamente.'); }
+    });
+    quickRow.appendChild(btn);
+  });
+
+  // ---------- Login por e-mail ----------
+  document.getElementById('emailLoginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim();
+    hideError();
+    try{
+      await Store.loginEmail(email, inviteToken);
+      bootAndRedirect();
+    }catch(err){
+      showError('Não encontramos acesso liberado para esse e-mail. Solicite acesso abaixo.');
+    }
+  });
+
+  // ---------- Google (real via OAuth se configurado no servidor, senão simulado) ----------
+  document.getElementById('googleBtn').addEventListener('click', () => {
+    if(Store.get('config').googleEnabled){
+      location.href = '/api/session/google' + (inviteToken ? ('?invite='+encodeURIComponent(inviteToken)) : '');
+    } else {
+      simulateGoogleChooser();
+    }
+  });
+  function simulateGoogleChooser(){
+    Util.openModal(`
+      <div class="modal-head"><h3>Escolher uma conta</h3><button class="modal-close" data-close>&times;</button></div>
+      <div class="modal-body">
+        <p class="text-muted text-sm">Simulação do seletor de contas do Google (defina GOOGLE_CLIENT_ID/SECRET no servidor pra usar o login real).</p>
+        ${team.map(u => `
+          <button class="popover-item" data-pick="${u.id}" style="border:1px solid var(--line);border-radius:14px;padding:12px;">
+            ${avatarHtml(u)} <div style="text-align:left;"><b style="display:block;">${Util.escapeHtml(u.name)}</b></div>
+          </button>`).join('')}
+      </div>
+    `);
+    const modal = document.querySelector('.overlay-layer .modal');
+    modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
+    modal.querySelectorAll('[data-pick]').forEach(b => b.addEventListener('click', async () => {
+      Util.closeModal();
+      try{ await Store.loginUser(b.dataset.pick, inviteToken); bootAndRedirect(); }
+      catch(e){ showError('Não foi possível entrar. Tente novamente.'); }
+    }));
+  }
+
+  // ---------- Solicitar acesso ----------
+  document.getElementById('requestAccessBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    Util.openModal(`
+      <div class="modal-head"><h3>Solicitar acesso</h3><button class="modal-close" data-close>&times;</button></div>
+      <div class="modal-body">
+        <p class="text-muted text-sm">Não existe criação de conta pública — envie sua solicitação e um administrador vai revisar.</p>
+        <div class="field"><label>Nome completo</label><input type="text" id="reqName"></div>
+        <div class="field"><label>E-mail</label><input type="email" id="reqEmail"></div>
+        <div class="field"><label>Motivo / cargo</label><textarea id="reqMsg" placeholder="Ex: Vou entrar como social media da equipe"></textarea></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" data-close>Cancelar</button>
+        <button class="btn btn-primary" id="sendRequestBtn">Enviar solicitação</button>
+      </div>
+    `);
+    const modal = document.querySelector('.overlay-layer .modal');
+    modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
+    modal.querySelector('#sendRequestBtn').addEventListener('click', async () => {
+      const name = modal.querySelector('#reqName').value.trim();
+      const email = modal.querySelector('#reqEmail').value.trim();
+      const msg = modal.querySelector('#reqMsg').value.trim();
+      if(!name || !email){ Util.toast('Preencha nome e e-mail.'); return; }
+      try{
+        await Store.requestAccess({ name, email, message:msg });
+        Util.closeModal();
+        Util.toast('Solicitação enviada! Um administrador vai revisar.','success');
+      }catch(err){ Util.toast(err.message || 'Não foi possível enviar. Tente novamente.'); }
+    });
+  });
+
+  // ---------- Saiba mais ----------
+  document.getElementById('learnMoreBtn').addEventListener('click', () => location.href = 'sobre-onevisionos.html');
+
+  // ---------- Boot screen + redirect ----------
+  function bootAndRedirect(){
+    const boot = document.getElementById('bootScreen');
+    const bar = document.getElementById('bootBar');
+    const sub = document.getElementById('bootSubText');
+    boot.classList.remove('hidden');
+    const msgs = ['Autenticando…','Carregando clientes e tarefas…','Sincronizando painel…','Quase lá…'];
+    let p = 0;
+    const timer = setInterval(() => {
+      p += 6 + Math.random()*10;
+      if(p >= 100){ p = 100; clearInterval(timer); setTimeout(()=> location.href='home.html', 260); }
+      bar.style.width = p + '%';
+      sub.textContent = msgs[Math.min(msgs.length-1, Math.floor(p/28))];
+    }, 140);
+  }
+})();
+</script>
+</body>
+</html>
