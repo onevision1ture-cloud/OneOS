@@ -192,7 +192,31 @@
     document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
   }
 
+  function showFatalError(err){
+    console.error('Shell.mount falhou:', err);
+    document.body.innerHTML = `
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#161014;color:#F6F0E8;font-family:'Space Grotesk',sans-serif;text-align:center;">
+        <div style="max-width:420px;">
+          <div style="font-size:38px;margin-bottom:14px;">⚠️</div>
+          <h2 style="font-size:19px;margin-bottom:10px;">Não foi possível carregar o sistema</h2>
+          <p style="font-size:13.5px;color:#B8AEA2;font-family:'Inter',sans-serif;line-height:1.6;margin-bottom:18px;">
+            Houve uma falha ao falar com o servidor (conexão com o banco de dados ou sessão). Detalhe técnico: ${(err && err.message) ? err.message.replace(/</g,'&lt;') : 'erro desconhecido'}.
+          </p>
+          <button onclick="location.reload()" style="background:#D6525D;color:#1C1215;border:none;padding:10px 20px;border-radius:10px;font-weight:600;font-family:'Space Grotesk',sans-serif;cursor:pointer;">Tentar novamente</button>
+        </div>
+      </div>`;
+  }
+
   async function mount(activeKey){
+    try{
+      return await mountInner(activeKey);
+    }catch(err){
+      showFatalError(err);
+      return false;
+    }
+  }
+
+  async function mountInner(activeKey){
     await Store.preload(['session']);
     if(!Store.get('session').loggedIn){
       location.href = 'index.html';
@@ -217,7 +241,7 @@
       <div class="sidebar-top">
         <a href="home.html" class="logo">
           <span class="logo-mark">O</span>
-          <span class="logo-text"><span class="top">One<span class="vision">vision</span></span><span class="tag">OS</span></span>
+          <span class="logo-text"><span class="top">One<span class="vision">vision</span></span><span class="tag">v1</span></span>
         </a>
         <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Esconder barra lateral">${icon('collapse',14)}</button>
       </div>
