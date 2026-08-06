@@ -7,9 +7,10 @@ if(!connectionString){
   console.error('DATABASE_URL não definida. Configure um Postgres (local ou plugin do Railway) e defina a variável de ambiente.');
 }
 
+const isLocalHost = connectionString && /(localhost|127\.0\.0\.1)/.test(connectionString);
 const pool = new Pool({
   connectionString,
-  ssl: process.env.PGSSL === 'false' ? false : (connectionString && connectionString.includes('railway') ? { rejectUnauthorized:false } : undefined),
+  ssl: process.env.PGSSL === 'false' ? false : (connectionString && !isLocalHost ? { rejectUnauthorized:false } : undefined),
 });
 
 async function query(text, params){
