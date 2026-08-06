@@ -10,6 +10,21 @@ Abra `http://localhost:3000`. Na primeira subida, o servidor cria as tabelas
 automaticamente e popula com dados de demonstração (equipe, clientes, quadros do
 OneTasks, etc.) — só acontece se o banco estiver vazio.
 
+### Testar o login com Google de verdade, ainda local (antes de publicar)
+Dá pra testar o OAuth do Google já rodando local, sem precisar do Railway:
+1. [Google Cloud Console](https://console.cloud.google.com/) → crie um projeto.
+2. **APIs & Services → OAuth consent screen** → modo "Externo" + "Testing" já basta (adicione seu e-mail como testador).
+3. **APIs & Services → Credentials → Create Credentials → OAuth client ID** → tipo **Web application**.
+4. Em **Authorized redirect URIs**, adicione: `http://localhost:3000/api/session/google/callback`
+5. Copie o Client ID e o Client Secret gerados e coloque no seu `.env`:
+   ```
+   GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=xxxxx
+   GOOGLE_CALLBACK_URL=http://localhost:3000/api/session/google/callback
+   ```
+6. Reinicie o servidor (`npm start`). O botão "Conectar com Google" na tela de login passa a abrir o fluxo real do Google — só funciona pra e-mails que já existem como usuário no sistema (equipe aprovada).
+7. Quando for pro Railway, é só voltar aqui e adicionar a URL do Railway como **outra** redirect URI autorizada no mesmo Client ID (dá pra ter várias) — sem precisar criar credenciais novas.
+
 ## 2. Subir para o GitHub
 ```
 git add -A

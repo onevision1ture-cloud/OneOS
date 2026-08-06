@@ -4,6 +4,17 @@
 
   const STAGES = ['Novo Lead','Contato','Proposta','Negociação','Fechado','Perdido'];
   const STAGE_COLORS = {'Novo Lead':'#8C8378','Contato':'#3E6FB0','Proposta':'#B9791F','Negociação':'#C23B47','Fechado':'#2F8F5B','Perdido':'#B0263A'};
+  const pendingDelete = new Set();
+
+  function deleteLeadWithUndo(l){
+    pendingDelete.add(l.id);
+    render();
+    renderKpis();
+    Util.toastUndo(`Lead "${l.name}" removido.`, async () => {
+      pendingDelete.delete(l.id);
+      await Store.remove('crmLeads', l.id);
+    }, { onUndo: () => { pendingDelete.delete(l.id); render(); renderKpis(); } });
+  }
 
   function isOverdue(l){
     return l.nextFollowUp && l.nextFollowUp < Store.isoDate(0) && !['Fechado','Perdido'].includes(l.stage);
@@ -38,7 +49,7 @@
   }
 
   function render(){
-    const leads = Store.list('crmLeads');
+    const leads = Store.list('crmLeads').filter(l => !pendingDelete.has(l.id));
     document.getElementById('crmGrid').innerHTML = STAGES.map(stage => {
       const list = leads.filter(l=>l.stage===stage).sort((a,b)=>(a.order||0)-(b.order||0));
       const total = list.reduce((s,l)=>s+(l.value||0),0);
@@ -91,7 +102,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deleteLeadBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir o lead "${l.name}"?`, async () => { await Store.remove('crmLeads', l.id); Util.closeModal(); render(); renderKpis(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir o lead "${l.name}"?`, () => { Util.closeModal(); deleteLeadWithUndo(l); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#saveLeadBtn').addEventListener('click', async () => {
       const name = modal.querySelector('#lName').value.trim();

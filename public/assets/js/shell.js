@@ -137,20 +137,55 @@
     });
   }
 
+  const ALWAYS_ALLOWED_PAGES = ['home','perfil','configuracoes'];
+  function allowedPagesFor(user, cargo){
+    if(!user) return [];
+    if(user.isAdmin) return null; // null = sem restrição
+    if(!cargo || cargo.pages === 'all' || cargo.pages == null) return null;
+    return Array.isArray(cargo.pages) ? cargo.pages : [];
+  }
+  function canSeePage(key, allowed){
+    if(allowed === null) return true;
+    if(ALWAYS_ALLOWED_PAGES.includes(key)) return true;
+    return allowed.includes(key);
+  }
+
   function visibleAlerts(){
     const notif = (Store.get('settings')||{}).notifications || {};
     if(notif.eventos === false) return [];
-    return Store.upcomingAlerts(7);
+    const dismissed = (Store.get('settings')||{}).dismissedAlerts || [];
+    return Store.upcomingAlerts(7).filter(a => !dismissed.includes(a.id));
+  }
+  function unreadAlerts(){
+    const read = (Store.get('settings')||{}).readAlerts || [];
+    return visibleAlerts().filter(a => !read.includes(a.id));
   }
 
   function renderNotifPopover(){
+    const notif = (Store.get('settings')||{}).notifications || {};
+    const enabled = notif.eventos !== false;
     const alerts = visibleAlerts();
-    if(!alerts.length) return `<div class="notif-empty">Nenhum evento ou reunião nos próximos dias.</div>`;
-    return alerts.map(a => `
-      <div class="notif-item">
-        <b>${a.kind === 'Reunião' ? '📹' : '📌'} ${Util.escapeHtml(a.title)}</b>
-        <span>${Util.relativeDay(a.date)} às ${a.time || '—'} · ${a.kind}</span>
-      </div>`).join('');
+    const read = (Store.get('settings')||{}).readAlerts || [];
+    return `
+      <div class="notif-controls">
+        <label class="flex items-center gap-8" style="font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--ink-2);">
+          <span class="toggle"><input type="checkbox" id="notifEnableToggle" ${enabled?'checked':''}><span class="track"></span><span class="thumb"></span></span>
+          Ativar notificações
+        </label>
+        <div class="flex gap-8">
+          <button class="btn-link" id="notifMarkAllBtn" style="font-size:11.5px;color:var(--ink-2);">Ler tudo</button>
+          <button class="btn-link" id="notifClearAllBtn" style="font-size:11.5px;color:var(--danger);">Limpar tudo</button>
+        </div>
+      </div>
+      ${!enabled ? `<div class="notif-empty">Notificações desativadas.</div>` :
+        !alerts.length ? `<div class="notif-empty">Nenhum evento ou reunião nos próximos dias.</div>` :
+        alerts.map(a => `
+        <div class="notif-item ${read.includes(a.id)?'is-read':''}">
+          <button class="notif-dismiss-btn" data-id="${a.id}" title="Excluir">✕</button>
+          <b>${a.kind === 'Reunião' ? '📹' : '📌'} ${Util.escapeHtml(a.title)}</b>
+          <span>${Util.relativeDay(a.date)} às ${a.time || '—'} · ${a.kind}</span>
+        </div>`).join('')}
+    `;
   }
 
   function closeAllPopovers(){
@@ -170,7 +205,13 @@
     const user = Store.currentUser();
     const cargo = Store.cargoOf(user);
     const collapsed = !!(Store.get('settings')||{}).sidebarCollapsed;
-    const alerts = visibleAlerts();
+    const alerts = unreadAlerts();
+    const allowedPages = allowedPagesFor(user, cargo);
+
+    if(!canSeePage(activeKey, allowedPages)){
+      location.href = 'home.html';
+      return false;
+    }
 
     const sidebarHtml = `
       <div class="sidebar-top">
@@ -181,14 +222,18 @@
         <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Esconder barra lateral">${icon('collapse',14)}</button>
       </div>
       <nav class="sidebar-nav">
-        ${NAV.map(g => `
+        ${NAV.map(g => {
+          const items = g.items.filter(it => canSeePage(it.key, allowedPages));
+          if(!items.length) return '';
+          return `
           <div class="nav-group">
             <span class="nav-group-label" data-i18n="${g.group}"></span>
-            ${g.items.map(it => `
+            ${items.map(it => `
               <a class="nav-item ${it.key===activeKey?'active':''}" href="${it.href}" data-page="${it.key}">
                 ${icon(it.icon)}<span data-i18n="nav.${it.key}"></span>
               </a>`).join('')}
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
       </nav>
       <div class="sidebar-bottom">
         <a class="nav-item ${activeKey==='configuracoes'?'active':''}" href="configuracoes.html" data-page="configuracoes">${icon('config')}<span data-i18n="nav.config"></span></a>
@@ -256,6 +301,48 @@
     const notifBtn = document.getElementById('notifBtn');
     const notifPop = document.getElementById('notifPopover');
     notifBtn.addEventListener('click', (e) => { e.stopPropagation(); const willOpen = !notifPop.classList.contains('open'); closeAllPopovers(); if(willOpen) notifPop.classList.add('open'); });
+
+    async function refreshNotifUI(){
+      notifPop.querySelector('.popover-scroll').innerHTML = renderNotifPopover();
+      wireNotifControls();
+      const count = unreadAlerts().length;
+      let badge = notifBtn.querySelector('.notif-count');
+      if(count){
+        if(!badge){ badge = document.createElement('span'); badge.className = 'notif-count'; notifBtn.appendChild(badge); }
+        badge.textContent = count;
+      } else if(badge){ badge.remove(); }
+    }
+    function wireNotifControls(){
+      const scroll = notifPop.querySelector('.popover-scroll');
+      scroll.querySelector('#notifEnableToggle')?.addEventListener('change', async (e) => {
+        const notif = Object.assign({}, (Store.get('settings')||{}).notifications, { eventos: e.target.checked });
+        await Store.patch('settings', { notifications: notif });
+        refreshNotifUI();
+      });
+      scroll.querySelector('#notifMarkAllBtn')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const ids = visibleAlerts().map(a=>a.id);
+        const read = Array.from(new Set([...((Store.get('settings')||{}).readAlerts||[]), ...ids]));
+        await Store.patch('settings', { readAlerts: read });
+        refreshNotifUI();
+        Util.toast('Notificações marcadas como lidas.');
+      });
+      scroll.querySelector('#notifClearAllBtn')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const ids = visibleAlerts().map(a=>a.id);
+        const dismissed = Array.from(new Set([...((Store.get('settings')||{}).dismissedAlerts||[]), ...ids]));
+        await Store.patch('settings', { dismissedAlerts: dismissed });
+        refreshNotifUI();
+        Util.toast('Notificações limpas.');
+      });
+      scroll.querySelectorAll('.notif-dismiss-btn').forEach(b => b.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const dismissed = Array.from(new Set([...((Store.get('settings')||{}).dismissedAlerts||[]), b.dataset.id]));
+        await Store.patch('settings', { dismissedAlerts: dismissed });
+        refreshNotifUI();
+      }));
+    }
+    wireNotifControls();
 
     const profileBtn = document.getElementById('profileBtn');
     const profilePop = document.getElementById('profilePopover');

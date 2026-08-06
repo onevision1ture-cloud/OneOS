@@ -2,6 +2,16 @@
   if(!(await Shell.mount('metas'))) return;
   await Store.preload(['goals','users']);
 
+  const pendingDelete = new Set();
+  function deleteGoalWithUndo(g){
+    pendingDelete.add(g.id);
+    render();
+    Util.toastUndo(`Meta "${g.title}" removida.`, async () => {
+      pendingDelete.delete(g.id);
+      await Store.remove('goals', g.id);
+    }, { onUndo: () => { pendingDelete.delete(g.id); render(); } });
+  }
+
   function goalCardHtml(g){
     const pct = g.target ? Math.min(100, Math.round((g.current/g.target)*100)) : 0;
     const owner = Store.find('users', g.owner);
@@ -26,14 +36,14 @@
   }
 
   function render(){
-    const goals = Store.list('goals').slice().sort((a,b)=>(a.order||0)-(b.order||0));
+    const goals = Store.list('goals').filter(g => !pendingDelete.has(g.id)).slice().sort((a,b)=>(a.order||0)-(b.order||0));
     const list = document.getElementById('goalsList');
     list.innerHTML = goals.length ? goals.map(goalCardHtml).join('') :
       `<div class="empty-state"><h4>Nenhuma meta cadastrada</h4><p>Defina a primeira meta da equipe.</p></div>`;
     list.querySelectorAll('.edit-goal-btn').forEach(b => b.addEventListener('click', () => openGoalForm(Store.find('goals', b.dataset.id))));
     list.querySelectorAll('.delete-goal-btn').forEach(b => b.addEventListener('click', () => {
       const g = Store.find('goals', b.dataset.id);
-      Util.confirmModal(`Excluir a meta "${g.title}"?`, async () => { await Store.remove('goals', g.id); render(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir a meta "${g.title}"?`, () => deleteGoalWithUndo(g), { danger:true, okLabel:'Excluir' });
     }));
     DragDrop.enable([list], {
       itemSelector:'.goal-card',
@@ -68,7 +78,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deleteGoalBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir a meta "${g.title}"?`, async () => { await Store.remove('goals', g.id); Util.closeModal(); render(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir a meta "${g.title}"?`, () => { Util.closeModal(); deleteGoalWithUndo(g); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#saveGoalBtn').addEventListener('click', async () => {
       const title = modal.querySelector('#gTitle').value.trim();

@@ -29,8 +29,8 @@
     { label:'Próximos 7 dias', value:alerts.length, tip:'Quantidade de eventos e reuniões agendados para os próximos 7 dias.' },
     { label:'Progresso médio das metas', value:progressoMedio+'%' },
   ];
-  document.getElementById('kpiGrid').innerHTML = kpis.map(k => `
-    <div class="kpi-card">
+  document.getElementById('kpiGrid').innerHTML = kpis.map((k,i) => `
+    <div class="kpi-card${i===0?' hero':''}">
       <div class="kpi-top"><span class="kpi-label">${k.label}</span>${k.tip?`<span class="info-tip" data-tip="${Util.escapeHtml(k.tip)}">!</span>`:''}</div>
       <div class="kpi-value">${k.value}</div>
     </div>`).join('');
@@ -75,6 +75,27 @@
     const owner = Store.find('users', g.owner);
     return `<div class="bar-row"><span class="b-label" style="width:220px;">${Util.escapeHtml(g.title)}</span><div class="b-track progress-bar"><b style="width:${pct}%"></b></div><span class="b-value">${pct}% · ${owner?owner.name.split(' ')[0]:''}</span></div>`;
   }).join('') || '<p class="text-faint text-sm">Nenhuma meta cadastrada ainda.</p>';
+
+  // Anel de progresso das metas
+  const R = 54, C = 2*Math.PI*R;
+  const ringOffset = C - (progressoMedio/100)*C;
+  document.getElementById('goalsRing').innerHTML = `
+    <svg width="132" height="132" viewBox="0 0 132 132">
+      <circle cx="66" cy="66" r="${R}" fill="none" stroke="var(--cream-deep)" stroke-width="12"/>
+      <circle cx="66" cy="66" r="${R}" fill="none" stroke="var(--wine)" stroke-width="12" stroke-linecap="round"
+        stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${ringOffset.toFixed(1)}"/>
+    </svg>
+    <div class="progress-ring-label"><b>${progressoMedio}%</b><span>metas concluídas</span></div>`;
+
+  // Equipe
+  const users = Store.list('users');
+  document.getElementById('teamList').innerHTML = users.length ? users.map(u => {
+    const openCount = tasks.filter(t => t.owner===u.id && t.status!=='Concluído').length;
+    return `<div class="team-row">
+      ${Shell.userAvatarHtml(u,'sm')}
+      <div><div class="tr-name">${Util.escapeHtml(u.name)}</div><div class="tr-sub">${openCount} tarefa${openCount===1?'':'s'} em aberto</div></div>
+    </div>`;
+  }).join('') : '<p class="text-faint text-sm">Nenhum membro cadastrado.</p>';
 
   Util.initTooltips(document);
 })();

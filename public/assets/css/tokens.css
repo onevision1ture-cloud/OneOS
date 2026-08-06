@@ -1,5 +1,5 @@
 /* Onevision OS — Design tokens, resets e base tipográfica
-   Portado da identidade visual da LP (Instrument Serif + Space Grotesk + Inter, paleta creme/vinho). */
+   Tipografia unificada em Space Grotesk (títulos/UI) + Inter (texto), paleta creme/vinho. */
 
 :root{
   --cream:#FAF6EF;
@@ -42,21 +42,21 @@
 
 :root[data-theme="dark"]{
   --cream:#161014;
-  --cream-deep:#1D1519;
+  --cream-deep:#2B2126;
   --paper:#1F181C;
   --ink:#F6F0E8;
-  --ink-2:#C7BCB0;
-  --ink-3:#8F8378;
-  --wine:#C23B47;
-  --wine-light:#D6525D;
+  --ink-2:#D2C8BD;
+  --ink-3:#9D9186;
+  --wine:#D6525D;
+  --wine-light:#E06670;
   --wine-glow:#E8707A;
-  --line:rgba(250,246,239,0.08);
-  --line-strong:rgba(250,246,239,0.16);
+  --line:rgba(250,246,239,0.12);
+  --line-strong:rgba(250,246,239,0.24);
 
   --shell-bg:#100C0E;
-  --panel-bg:#1B1417;
-  --panel-bg-2:#221A1E;
-  --overlay-bg:rgba(0,0,0,.6);
+  --panel-bg:#1C1518;
+  --panel-bg-2:#241C20;
+  --overlay-bg:rgba(0,0,0,.65);
 
   --success:#5FCB8C;
   --success-bg:rgba(95,203,140,.14);
@@ -91,8 +91,8 @@ input,textarea,select{font:inherit;color:inherit;}
 ::-webkit-scrollbar-thumb{background:var(--line-strong);border-radius:99px;}
 ::-webkit-scrollbar-track{background:transparent;}
 
-.serif{font-family:'Instrument Serif',serif;}
-.serif-i{font-family:'Instrument Serif',serif;font-style:italic;}
+.serif{font-family:'Space Grotesk',sans-serif;}
+.serif-i{font-family:'Space Grotesk',sans-serif;font-weight:600;}
 .mono-label{
   font-family:'Space Grotesk',sans-serif;
   text-transform:uppercase;
@@ -114,11 +114,11 @@ input,textarea,select{font:inherit;color:inherit;}
   background:radial-gradient(circle at 35% 30%, #FBF3E3, #F1E1C4 70%);
   border:1px solid var(--line-strong);
   display:flex;align-items:center;justify-content:center;
-  font-family:'Instrument Serif',serif;font-style:italic;font-size:20px;color:var(--wine);
+  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;color:var(--wine);
   flex-shrink:0;
 }
 .logo-text{display:flex;flex-direction:column;line-height:1;}
-.logo-text .top{font-family:'Instrument Serif',serif;font-style:italic;font-size:21px;letter-spacing:.01em;color:var(--ink);}
+.logo-text .top{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:21px;letter-spacing:.01em;color:var(--ink);}
 .logo-text .top .vision{color:var(--wine);}
 .logo-text .tag{font-family:'Space Grotesk',sans-serif;font-size:8.5px;letter-spacing:.22em;color:var(--ink-3);margin-top:3px;text-transform:uppercase;}
 
@@ -192,7 +192,7 @@ input,textarea,select{font:inherit;color:inherit;}
 /* ---------- Avatars ---------- */
 .avatar{
   border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  font-family:'Instrument Serif',serif;font-style:italic;color:#FBF3E3;
+  font-family:'Space Grotesk',sans-serif;font-weight:600;color:#FBF3E3;
   background:linear-gradient(140deg, var(--wine), #2b0812);
   background-size:cover;background-position:center;
 }
@@ -238,6 +238,7 @@ input,textarea,select{font:inherit;color:inherit;}
 .flex-col{display:flex;flex-direction:column;}
 .items-center{align-items:center;}
 .justify-between{justify-content:space-between;}
+.justify-center{justify-content:center;}
 .gap-8{gap:8px;}
 .gap-12{gap:12px;}
 .gap-16{gap:16px;}

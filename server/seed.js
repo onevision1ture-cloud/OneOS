@@ -46,7 +46,7 @@ async function seedIfEmpty(){
   ];
   const USERS = [
     { id:'u_alisson', name:'Alisson Machado', email:'alisson@onevision1ture.com', phone:'(48) 98888-1001', cargoId:'cargo_estrategia', isAdmin:true, verified:true, status:'ativo', color:'#6E1220', joinedAt:isoDate(-620) },
-    { id:'u_gabriel', name:'Gabriel Tobar', email:'gabriel@onevision1ture.com', phone:'(48) 98888-1002', cargoId:'cargo_tech', isAdmin:true, verified:true, status:'ativo', color:'#8F1D2C', joinedAt:isoDate(-580) },
+    { id:'u_gabriel', name:'Gabriel Tobar', email:'tobar.s.gabriell@gmail.com', phone:'(48) 98888-1002', cargoId:'cargo_tech', isAdmin:true, verified:true, status:'ativo', color:'#8F1D2C', joinedAt:isoDate(-580) },
     { id:'u_bianca', name:'Bianca Ramos', email:'bianca@onevision1ture.com', phone:'(48) 98888-1003', cargoId:'cargo_social', isAdmin:false, verified:true, status:'ativo', color:'#B0263A', joinedAt:isoDate(-400) },
     { id:'u_thiago', name:'Thiago Nunes', email:'thiago@onevision1ture.com', phone:'(48) 98888-1004', cargoId:'cargo_trafego', isAdmin:false, verified:true, status:'ativo', color:'#7A1420', joinedAt:isoDate(-310) },
   ];
@@ -59,45 +59,36 @@ async function seedIfEmpty(){
     { id:'cl_nova', name:'Studio Nova Arquitetura', segment:'Arquitetura & Interiores', status:'prospeccao', contractValue:0, platforms:[{name:'Meta',spend:0},{name:'Google',spend:0},{name:'Outro',spend:0}], contact:{nome:'Fernanda Lopes', email:'fernanda@studionova.com.br', telefone:'(48) 99966-7788'}, notes:'Diagnóstico agendado — aguardando proposta.', order:5 },
   ];
   const BOARDS = [
-    { id:'b_clientes', workspace:'Empresa', name:'Clientes Ativos', icon:'🏢', description:'Acompanhamento geral de todas as contas ativas.', visibility:'all', order:0 },
-    { id:'b_interno', workspace:'Empresa', name:'Tarefas Internas', icon:'🗂️', description:'Organização geral da operação da agência.', visibility:'all', order:1 },
-    { id:'b_bianca', workspace:'Funcionários', name:'Bianca — Social Media', icon:'📱', description:'Produção de conteúdo e calendário de redes.', visibility:'all', order:2 },
-    { id:'b_thiago', workspace:'Funcionários', name:'Thiago — Tráfego Pago', icon:'📊', description:'Otimização e testes de campanhas.', visibility:'all', order:3 },
+    { id:'b_gabriel', workspace:'Pessoal', name:'Gabriel Tobar', icon:'🛠️', description:'Quadro pessoal de demandas técnicas do Gabriel.', visibility:'all', order:0 },
+    { id:'b_alisson', workspace:'Pessoal', name:'Alisson Machado', icon:'🎯', description:'Quadro pessoal de demandas de estratégia do Alisson.', visibility:'all', order:1 },
+    { id:'b_empresa', workspace:'Empresa', name:'Empresa Onevision', icon:'🏢', description:'Demandas gerais da agência, de todo mundo.', visibility:'all', order:2 },
   ];
   const BOARD_GROUPS = [
-    { id:'g_cli_1', boardId:'b_clientes', name:'Onboarding', color:'#B9791F', order:0, automation:null },
-    { id:'g_cli_2', boardId:'b_clientes', name:'Em operação', color:'#3E6FB0', order:1, automation:null },
-    { id:'g_cli_3', boardId:'b_clientes', name:'Concluído', color:'#2F8F5B', order:2, automation:null },
-    { id:'g_int_1', boardId:'b_interno', name:'A fazer', color:'#8C8378', order:0, automation:{ onStatus:'Concluído', targetBoardId:'b_interno', targetGroupId:'g_int_3' } },
-    { id:'g_int_2', boardId:'b_interno', name:'Em andamento', color:'#3E6FB0', order:1, automation:{ onStatus:'Concluído', targetBoardId:'b_interno', targetGroupId:'g_int_3' } },
-    { id:'g_int_3', boardId:'b_interno', name:'Concluído', color:'#2F8F5B', order:2, automation:null },
-    { id:'g_bia_1', boardId:'b_bianca', name:'Ideias', color:'#8C8378', order:0, automation:null },
-    { id:'g_bia_2', boardId:'b_bianca', name:'Em produção', color:'#3E6FB0', order:1, automation:{ onStatus:'Concluído', targetBoardId:'b_bianca', targetGroupId:'g_bia_3' } },
-    { id:'g_bia_3', boardId:'b_bianca', name:'Publicado', color:'#2F8F5B', order:2, automation:null },
-    { id:'g_thi_1', boardId:'b_thiago', name:'Backlog', color:'#8C8378', order:0, automation:null },
-    { id:'g_thi_2', boardId:'b_thiago', name:'Testando', color:'#3E6FB0', order:1, automation:{ onStatus:'Concluído', targetBoardId:'b_thiago', targetGroupId:'g_thi_3' } },
-    { id:'g_thi_3', boardId:'b_thiago', name:'Validado', color:'#2F8F5B', order:2, automation:null },
+    { id:'g_gab_1', boardId:'b_gabriel', name:'Demandas Novas', color:'#8C8378', order:0, automation:{ onStatus:'Concluído', targetBoardId:'b_gabriel', targetGroupId:'g_gab_3' } },
+    { id:'g_gab_2', boardId:'b_gabriel', name:'Demandas em Andamento', color:'#3E6FB0', order:1, automation:{ onStatus:'Concluído', targetBoardId:'b_gabriel', targetGroupId:'g_gab_3' } },
+    { id:'g_gab_3', boardId:'b_gabriel', name:'Demandas Concluídas', color:'#2F8F5B', order:2, automation:null },
+    { id:'g_ali_1', boardId:'b_alisson', name:'Demandas Novas', color:'#8C8378', order:0, automation:{ onStatus:'Concluído', targetBoardId:'b_alisson', targetGroupId:'g_ali_3' } },
+    { id:'g_ali_2', boardId:'b_alisson', name:'Demandas em Andamento', color:'#3E6FB0', order:1, automation:{ onStatus:'Concluído', targetBoardId:'b_alisson', targetGroupId:'g_ali_3' } },
+    { id:'g_ali_3', boardId:'b_alisson', name:'Demandas Concluídas', color:'#2F8F5B', order:2, automation:null },
+    { id:'g_emp_1', boardId:'b_empresa', name:'Demandas Novas', color:'#8C8378', order:0, automation:{ onStatus:'Concluído', targetBoardId:'b_empresa', targetGroupId:'g_emp_3' } },
+    { id:'g_emp_2', boardId:'b_empresa', name:'Demandas em Andamento', color:'#3E6FB0', order:1, automation:{ onStatus:'Concluído', targetBoardId:'b_empresa', targetGroupId:'g_emp_3' } },
+    { id:'g_emp_3', boardId:'b_empresa', name:'Demandas Concluídas', color:'#2F8F5B', order:2, automation:null },
   ];
   const TASKS = [
-    { id:'t1', boardId:'b_clientes', groupId:'g_cli_1', name:'Studio Nova — reunião de diagnóstico', owner:'u_alisson', status:'Em andamento', date:isoDate(3), priority:'Alta', order:0, notes:null },
-    { id:'t2', boardId:'b_clientes', groupId:'g_cli_2', name:'Moda Studio — otimizar campanha de conversão', owner:'u_thiago', status:'Em andamento', date:isoDate(1), priority:'Alta', order:0, notes:null },
-    { id:'t3', boardId:'b_clientes', groupId:'g_cli_2', name:'OdontoVida — revisão mensal de SEO', owner:'u_gabriel', status:'Não iniciado', date:isoDate(5), priority:'Média', order:1, notes:null },
-    { id:'t4', boardId:'b_clientes', groupId:'g_cli_2', name:'FitCore — planejamento da 2ª unidade', owner:'u_alisson', status:'Não iniciado', date:isoDate(7), priority:'Média', order:2, notes:null },
-    { id:'t5', boardId:'b_clientes', groupId:'g_cli_3', name:'PetHome — relatório trimestral entregue', owner:'u_bianca', status:'Concluído', date:isoDate(-2), priority:'Baixa', order:0, notes:null },
-    { id:'t6', boardId:'b_interno', groupId:'g_int_1', name:'Atualizar contrato padrão de novos clientes', owner:'u_alisson', status:'Não iniciado', date:isoDate(4), priority:'Média', order:0, notes:null },
-    { id:'t7', boardId:'b_interno', groupId:'g_int_2', name:'Organizar apresentação institucional', owner:'u_gabriel', status:'Em andamento', date:isoDate(2), priority:'Alta', order:0, notes:null },
-    { id:'t8', boardId:'b_interno', groupId:'g_int_3', name:'Renovar certificado do site', owner:'u_gabriel', status:'Concluído', date:isoDate(-5), priority:'Baixa', order:0, notes:null },
-    { id:'t9', boardId:'b_bianca', groupId:'g_bia_1', name:'Reels — bastidores da equipe', owner:'u_bianca', status:'Não iniciado', date:isoDate(2), priority:'Média', order:0, notes:null },
-    { id:'t10', boardId:'b_bianca', groupId:'g_bia_2', name:'Carrossel — cases de resultado', owner:'u_bianca', status:'Em andamento', date:isoDate(1), priority:'Alta', order:0, notes:null },
-    { id:'t11', boardId:'b_bianca', groupId:'g_bia_3', name:'Story — bastidor reunião de equipe', owner:'u_bianca', status:'Concluído', date:isoDate(-1), priority:'Baixa', order:0, notes:null },
-    { id:'t12', boardId:'b_thiago', groupId:'g_thi_1', name:'Testar novo público lookalike — PetHome', owner:'u_thiago', status:'Não iniciado', date:isoDate(3), priority:'Média', order:0, notes:null },
-    { id:'t13', boardId:'b_thiago', groupId:'g_thi_2', name:'Teste A/B de criativos — FitCore', owner:'u_thiago', status:'Em andamento', date:isoDate(1), priority:'Alta', order:0, notes:null },
+    { id:'t1', boardId:'b_gabriel', groupId:'g_gab_1', name:'Atualizar SSL do site institucional', owner:'u_gabriel', status:'Não iniciado', date:isoDate(2), priority:'Alta', type:'Suporte', order:0, notes:null },
+    { id:'t2', boardId:'b_gabriel', groupId:'g_gab_2', name:'Configurar automação de e-mail para novos leads', owner:'u_gabriel', status:'Em andamento', date:isoDate(4), priority:'Média', type:'Novo projeto', order:0, notes:null },
+    { id:'t3', boardId:'b_gabriel', groupId:'g_gab_3', name:'Revisar performance do site da OdontoVida', owner:'u_gabriel', status:'Concluído', date:isoDate(-3), priority:'Baixa', type:'Revisão', order:0, notes:null },
+    { id:'t4', boardId:'b_alisson', groupId:'g_ali_1', name:'Preparar apresentação para Studio Nova', owner:'u_alisson', status:'Não iniciado', date:isoDate(1), priority:'Alta', type:'Novo projeto', order:0, notes:null },
+    { id:'t5', boardId:'b_alisson', groupId:'g_ali_2', name:'Acompanhamento mensal — FitCore', owner:'u_alisson', status:'Em andamento', date:isoDate(2), priority:'Média', type:'Acompanhamento', order:0, notes:null },
+    { id:'t6', boardId:'b_alisson', groupId:'g_ali_3', name:'Reunião de fechamento — PetHome', owner:'u_alisson', status:'Concluído', date:isoDate(-1), priority:'Baixa', type:'Reunião', order:0, notes:null },
+    { id:'t7', boardId:'b_empresa', groupId:'g_emp_1', name:'Renovar contrato padrão de novos clientes', owner:'u_alisson', status:'Não iniciado', date:isoDate(5), priority:'Média', type:'Outro', order:0, notes:null },
+    { id:'t8', boardId:'b_empresa', groupId:'g_emp_2', name:'Organizar apresentação institucional 2026', owner:'u_gabriel', status:'Em andamento', date:isoDate(3), priority:'Alta', type:'Novo projeto', order:0, notes:null },
+    { id:'t9', boardId:'b_empresa', groupId:'g_emp_3', name:'Fechamento financeiro do mês', owner:'u_bianca', status:'Concluído', date:isoDate(-2), priority:'Baixa', type:'Acompanhamento', order:0, notes:null },
   ];
   const BOARD_CHATS = [
-    { id:'c1', boardId:'b_clientes', authorId:'u_alisson', text:'Pessoal, diagnóstico do Studio Nova ficou ótimo — bora fechar essa semana.', createdAt:daysFromNow(-1,9,20) },
-    { id:'c2', boardId:'b_clientes', authorId:'u_thiago', text:'Fechado! Já ajustei a campanha da Moda Studio também, CPA caiu 18%.', createdAt:daysFromNow(-1,9,42) },
-    { id:'c3', boardId:'b_interno', authorId:'u_gabriel', text:'Subi a nova versão do certificado do site, tudo certo.', createdAt:daysFromNow(-2,15,10) },
-    { id:'c4', boardId:'b_bianca', authorId:'u_bianca', text:'Alguém tem sugestão de música pro reels de bastidores?', createdAt:daysFromNow(0,8,5) },
+    { id:'c1', boardId:'b_gabriel', authorId:'u_gabriel', text:'Vou priorizar o SSL do site institucional hoje ainda.', createdAt:daysFromNow(-1,9,20) },
+    { id:'c2', boardId:'b_alisson', authorId:'u_alisson', text:'Apresentação da Studio Nova tá quase pronta, fecho amanhã.', createdAt:daysFromNow(-1,10,5) },
+    { id:'c3', boardId:'b_empresa', authorId:'u_bianca', text:'Fechamento financeiro do mês concluído, já pode conferir.', createdAt:daysFromNow(-2,15,10) },
   ];
   const CRM_LEADS = [
     { id:'lead1', name:'Studio Nova Arquitetura', stage:'Proposta', value:3800, contact:'Fernanda Lopes', nextFollowUp:isoDate(1), notes:'Aguardando aprovação interna do orçamento.', order:0 },

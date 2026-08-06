@@ -7,41 +7,47 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/app.css">
 </head>
 <body>
 <div class="grain"></div>
 
-<div class="auth-shell">
-  <div class="auth-side">
-    <a href="home.html" class="logo" style="pointer-events:none;">
+<div class="login-shell">
+  <div class="login-visual">
+    <a href="home.html" class="logo login-visual-logo" style="pointer-events:none;">
       <span class="logo-mark">O</span>
       <span class="logo-text"><span class="top">One<span class="vision">vision</span></span><span class="tag">Sistema OS</span></span>
     </a>
 
-    <div class="auth-orbit-wrap">
-      <div class="auth-orbit" style="width:320px;height:320px;"></div>
-      <div class="auth-orbit" style="width:230px;height:230px;animation-direction:reverse;animation-duration:40s;border-style:dashed;"></div>
-      <div class="auth-badge">
-        <span class="bt">One<span class="v">vision</span></span>
-        <span class="bs">OS</span>
+    <div class="login-preview-wrap">
+      <div class="login-preview-card" id="lpCard">
+        <div class="lp-topbar">
+          <div class="lp-dots"><i></i><i></i><i></i></div>
+          <span class="lp-tab" id="lpTab">painel.onevisionos.app</span>
+        </div>
+        <div class="lp-stat" id="lpStat">128</div>
+        <span class="lp-badge" id="lpBadge">▲ tarefas concluídas essa semana</span>
+        <div class="lp-label" id="lpLabel">Total de demandas organizadas pela equipe no OneTasks nos últimos 7 dias.</div>
+        <div class="lp-chart" id="lpChart">
+          <b style="--h:32%"></b><b style="--h:48%"></b><b style="--h:40%"></b><b style="--h:62%"></b>
+          <b style="--h:54%"></b><b style="--h:74%"></b><b style="--h:66%"></b><b style="--h:90%"></b>
+        </div>
+        <div class="lp-live"><i></i><span>Painel atualizando ao vivo…</span></div>
+        <div class="lp-pills"><span>OneTasks</span><span>CRM</span><span>Meta Ads</span><span>Financeiro</span></div>
       </div>
+      <div class="lp-hint">Clique no painel pra ver outro número</div>
     </div>
 
-    <div class="auth-side-copy">
-      <h2 class="serif">O time de marketing organizado <em style="color:var(--wine-glow);">num só lugar</em>.</h2>
-      <p>CRM, tarefas, campanhas, conteúdo e financeiro da Onevision — tudo dentro de um sistema privado, feito sob medida para a nossa operação.</p>
-      <button class="learn-more-btn" id="learnMoreBtn">
-        <span data-i18n="login.learnMore"></span>
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
+    <div class="login-visual-copy">
+      <h2>O time de marketing organizado <span>num só lugar</span>.</h2>
+      <p>CRM, tarefas, campanhas, conteúdo e financeiro da Onevision — tudo dentro de um sistema privado, feito sob medida pra nossa operação.</p>
     </div>
   </div>
 
-  <div class="auth-form-side">
-    <div class="auth-form-wrap">
+  <div class="login-form-side">
+    <div class="login-form-wrap">
       <div class="auth-private-note">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10" width="15" height="10" rx="2.5"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
         <span data-i18n="login.private"></span>
@@ -60,18 +66,13 @@
 
       <div class="auth-divider"><span data-i18n="login.or"></span></div>
 
-      <form id="emailLoginForm" class="field-col" style="display:flex;flex-direction:column;gap:14px;">
+      <form id="emailLoginForm" style="display:flex;flex-direction:column;gap:14px;">
         <div class="field">
           <label data-i18n="login.emailLabel"></label>
           <input type="email" id="loginEmail" placeholder="voce@onevision1ture.com" autocomplete="email" required>
         </div>
         <button type="submit" class="btn btn-primary btn-block" data-i18n="login.enter"></button>
       </form>
-
-      <div style="margin-top:22px;">
-        <p class="field-hint" style="margin-bottom:10px;">Acesso rápido — equipe já aprovada:</p>
-        <div id="quickTeamRow" style="display:flex;gap:8px;"></div>
-      </div>
 
       <div class="auth-links-row">
         <span class="text-faint" data-i18n="login.noAccount"></span>
@@ -92,6 +93,7 @@
   <div class="boot-sub" id="bootSubText">Preparando seu painel…</div>
   <div class="boot-bar"><b id="bootBar"></b></div>
 </div>
+
 <script src="assets/js/store.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/i18n.js"></script>
@@ -105,6 +107,42 @@
   const errBanner = document.getElementById('loginErrorBanner');
   function showError(msg){ errBanner.classList.remove('hidden'); errBanner.textContent = msg; }
   function hideError(){ errBanner.classList.add('hidden'); }
+
+  // ---------- Painel interativo (tilt + clique pra trocar métrica) ----------
+  const lpCard = document.getElementById('lpCard');
+  const finePointer = window.matchMedia('(pointer:fine)').matches;
+  if(finePointer && lpCard){
+    lpCard.addEventListener('mousemove', (e) => {
+      const r = lpCard.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;
+      const py = (e.clientY - r.top) / r.height;
+      lpCard.style.transform = `rotateX(${(py-.5)*-10}deg) rotateY(${(px-.5)*12}deg) scale(1.02)`;
+    });
+    lpCard.addEventListener('mouseleave', () => { lpCard.style.transform = 'rotateX(0) rotateY(0) scale(1)'; });
+  }
+  const LP_METRICS = [
+    { stat:'128', badge:'▲ tarefas concluídas essa semana', label:'Total de demandas organizadas pela equipe no OneTasks nos últimos 7 dias.', bars:[32,48,40,62,54,74,66,90], tab:'painel.onevisionos.app' },
+    { stat:'R$ 47k', badge:'▲ investido em mídia', label:'Investimento total em Meta e Google Ads gerenciado pela agência esse mês.', bars:[40,55,45,60,50,80,70,95], tab:'metaads.onevisionos.app' },
+    { stat:'34%', badge:'▲ taxa de conversão do CRM', label:'Leads que viraram clientes fechados no funil desse trimestre.', bars:[20,35,30,45,55,50,65,72], tab:'crm.onevisionos.app' },
+    { stat:'12', badge:'● clientes ativos agora', label:'Contas em operação, todas acompanhadas em tempo real pelo time.', bars:[50,45,60,58,66,62,78,84], tab:'clientes.onevisionos.app' },
+  ];
+  let lpIndex = 0;
+  const lpChart = document.getElementById('lpChart');
+  function renderLpMetric(i){
+    const m = LP_METRICS[i];
+    const stat = document.getElementById('lpStat');
+    const badge = document.getElementById('lpBadge');
+    const label = document.getElementById('lpLabel');
+    const tab = document.getElementById('lpTab');
+    stat.style.opacity = '0'; label.style.opacity = '0';
+    setTimeout(() => {
+      stat.textContent = m.stat; badge.textContent = m.badge; label.textContent = m.label; tab.textContent = m.tab;
+      lpChart.querySelectorAll('b').forEach((b,bi) => b.style.setProperty('--h', m.bars[bi]+'%'));
+      stat.style.opacity = '1'; label.style.opacity = '1';
+    }, 150);
+  }
+  if(lpCard) lpCard.addEventListener('click', () => { lpIndex = (lpIndex+1) % LP_METRICS.length; renderLpMetric(lpIndex); });
+  requestAnimationFrame(() => setTimeout(() => lpChart && lpChart.classList.add('grown'), 100));
 
   // ---------- Convite via link ----------
   const params = new URLSearchParams(location.search);
@@ -125,26 +163,9 @@
     showError(`A conta Google ${params.get('email')||''} não tem acesso liberado. Solicite acesso abaixo.`);
   }
 
-  // ---------- Acesso rápido (equipe já aprovada) ----------
   function avatarHtml(u){
-    return `<div class="avatar avatar-md" style="width:100%;height:100%;background-image:${u.photo?`url('${u.photo}')`:'none'};background:${u.photo?`url('${u.photo}') center/cover`:`linear-gradient(140deg, ${u.color||'#6E1220'}, #2b0812)`};">${u.photo?'':Util.initials(u.name)}</div>`;
+    return `<div class="avatar avatar-md" style="width:100%;height:100%;background:${u.photo?`url('${u.photo}') center/cover`:`linear-gradient(140deg, ${u.color||'#6E1220'}, #2b0812)`};">${u.photo?'':Util.initials(u.name)}</div>`;
   }
-  const team = await Store.fetchTeamPicker();
-  const quickRow = document.getElementById('quickTeamRow');
-  team.forEach(u => {
-    const btn = document.createElement('button');
-    btn.className = 'btn-icon';
-    btn.style.cssText = 'width:44px;height:44px;border-radius:50%;overflow:hidden;border:2px solid var(--line-strong);transition:border-color .2s;';
-    btn.title = u.name;
-    btn.innerHTML = avatarHtml(u);
-    btn.addEventListener('mouseenter', () => btn.style.borderColor = 'var(--wine)');
-    btn.addEventListener('mouseleave', () => btn.style.borderColor = 'var(--line-strong)');
-    btn.addEventListener('click', async () => {
-      try{ await Store.loginUser(u.id, inviteToken); bootAndRedirect(); }
-      catch(e){ showError('Não foi possível entrar. Tente novamente.'); }
-    });
-    quickRow.appendChild(btn);
-  });
 
   // ---------- Login por e-mail ----------
   document.getElementById('emailLoginForm').addEventListener('submit', async (e) => {
@@ -167,7 +188,8 @@
       simulateGoogleChooser();
     }
   });
-  function simulateGoogleChooser(){
+  async function simulateGoogleChooser(){
+    const team = await Store.fetchTeamPicker();
     Util.openModal(`
       <div class="modal-head"><h3>Escolher uma conta</h3><button class="modal-close" data-close>&times;</button></div>
       <div class="modal-body">
@@ -217,9 +239,6 @@
       }catch(err){ Util.toast(err.message || 'Não foi possível enviar. Tente novamente.'); }
     });
   });
-
-  // ---------- Saiba mais ----------
-  document.getElementById('learnMoreBtn').addEventListener('click', () => location.href = 'sobre-onevisionos.html');
 
   // ---------- Boot screen + redirect ----------
   function bootAndRedirect(){

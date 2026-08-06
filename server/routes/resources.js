@@ -3,7 +3,7 @@ const { makeCrudRouter } = require('./crud-factory');
 
 const router = express.Router();
 
-router.use('/cargos', makeCrudRouter({ table:'cargos', columns:['name','isAdmin','description'], orderable:false, idPrefix:'cargo' }));
+router.use('/cargos', makeCrudRouter({ table:'cargos', columns:['name','isAdmin','description','pages'], jsonColumns:['pages'], orderable:false, idPrefix:'cargo' }));
 
 router.use('/users', makeCrudRouter({
   table:'users',
@@ -13,7 +13,7 @@ router.use('/users', makeCrudRouter({
 
 router.use('/clients', makeCrudRouter({
   table:'clients',
-  columns:['name','segment','status','contractValue','platforms','contact','notes','order'],
+  columns:['name','segment','status','contractValue','platforms','contact','notes','logo','order'],
   jsonColumns:['platforms','contact'],
   idPrefix:'cl',
 }));
@@ -34,13 +34,13 @@ router.use('/board-groups', makeCrudRouter({
 
 router.use('/tasks', makeCrudRouter({
   table:'tasks',
-  columns:['boardId','groupId','name','owner','status','date','priority','notes','order'],
+  columns:['boardId','groupId','name','owner','status','date','priority','type','notes','order'],
   idPrefix:'t',
 }));
 
 router.use('/board-chats', makeCrudRouter({
   table:'board_chats',
-  columns:['boardId','authorId','text','createdAt'],
+  columns:['boardId','authorId','toUserId','text','createdAt'],
   orderable:false, idPrefix:'c',
 }));
 

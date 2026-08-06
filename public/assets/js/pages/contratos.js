@@ -3,9 +3,19 @@
   await Store.preload(['contracts','clients']);
 
   const STATUS_BADGE = { 'Ativo':'badge-success', 'A renovar':'badge-warn', 'Encerrado':'badge-neutral' };
+  const pendingDelete = new Set();
+
+  function deleteContractWithUndo(c){
+    pendingDelete.add(c.id);
+    render();
+    Util.toastUndo(`Contrato "${c.title}" removido.`, async () => {
+      pendingDelete.delete(c.id);
+      await Store.remove('contracts', c.id);
+    }, { onUndo: () => { pendingDelete.delete(c.id); render(); } });
+  }
 
   function render(){
-    const contracts = Store.list('contracts');
+    const contracts = Store.list('contracts').filter(c => !pendingDelete.has(c.id));
     const body = document.getElementById('contractsBody');
     const empty = document.getElementById('contractsEmpty');
     if(!contracts.length){
@@ -34,7 +44,7 @@
     body.querySelectorAll('.edit-contract-btn').forEach(b => b.addEventListener('click', () => openContractForm(Store.find('contracts', b.dataset.id))));
     body.querySelectorAll('.delete-contract-btn').forEach(b => b.addEventListener('click', () => {
       const c = Store.find('contracts', b.dataset.id);
-      Util.confirmModal(`Excluir o contrato "${c.title}"?`, async () => { await Store.remove('contracts', c.id); render(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir o contrato "${c.title}"?`, () => deleteContractWithUndo(c), { danger:true, okLabel:'Excluir' });
     }));
   }
 
@@ -66,7 +76,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deleteContractBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir o contrato "${c.title}"?`, async () => { await Store.remove('contracts', c.id); Util.closeModal(); render(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir o contrato "${c.title}"?`, () => { Util.closeModal(); deleteContractWithUndo(c); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#saveContractBtn').addEventListener('click', async () => {
       const title = modal.querySelector('#ctTitle').value.trim();

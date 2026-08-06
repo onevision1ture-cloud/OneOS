@@ -4,6 +4,16 @@
 
   let currentFilter = 'todas';
   let selectedRange = 'Últimos 30 dias';
+  const pendingDelete = new Set();
+
+  function deleteAdWithUndo(a){
+    pendingDelete.add(a.id);
+    render();
+    Util.toastUndo(`Campanha "${a.campaign}" removida.`, async () => {
+      pendingDelete.delete(a.id);
+      await Store.remove('metaAds', a.id);
+    }, { onUndo: () => { pendingDelete.delete(a.id); render(); } });
+  }
 
   function kpis(){
     const ads = Store.list('metaAds');
@@ -60,7 +70,7 @@
   }
 
   function render(){
-    const ads = Store.list('metaAds');
+    const ads = Store.list('metaAds').filter(a => !pendingDelete.has(a.id));
     const filtered = currentFilter === 'todas' ? ads : ads.filter(a => a.status === currentFilter);
     const list = document.getElementById('adsList');
     list.innerHTML = filtered.length ? filtered.map(adCardHtml).join('') :
@@ -68,7 +78,7 @@
     list.querySelectorAll('.edit-ad-btn').forEach(b => b.addEventListener('click', () => openAdForm(Store.find('metaAds', b.dataset.id))));
     list.querySelectorAll('.delete-ad-btn').forEach(b => b.addEventListener('click', () => {
       const a = Store.find('metaAds', b.dataset.id);
-      Util.confirmModal(`Remover a campanha "${a.campaign}"?`, async () => { await Store.remove('metaAds', a.id); render(); Util.toast('Campanha removida.'); }, { danger:true, okLabel:'Remover' });
+      Util.confirmModal(`Remover a campanha "${a.campaign}"?`, () => deleteAdWithUndo(a), { danger:true, okLabel:'Remover' });
     }));
     Util.initTooltips(list);
   }

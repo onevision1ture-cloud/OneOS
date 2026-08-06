@@ -7,7 +7,7 @@
 (function(){
   const DICT = {
     pt:{
-      'nav.principal':'Principal', 'nav.inicio':'Início', 'nav.dashboard':'Dashboard',
+      'nav.principal':'Principal', 'nav.inicio':'Início', 'nav.home':'Início', 'nav.dashboard':'Dashboard',
       'nav.operacao':'Operação', 'nav.clientes':'Clientes', 'nav.tarefas':'OneTasks', 'nav.crm':'CRM', 'nav.metaads':'Meta Ads', 'nav.planejamento':'Planejamento',
       'nav.gestao':'Gestão', 'nav.equipe':'Equipe', 'nav.eventos':'Eventos', 'nav.reuniao':'Reunião', 'nav.metas':'Metas', 'nav.relatorios':'Relatórios',
       'nav.admin':'Administrativo', 'nav.financeiro':'Financeiro', 'nav.contratos':'Contratos', 'nav.arquivos':'Arquivos',
@@ -23,7 +23,7 @@
       'settings.notifications':'Notificações', 'settings.invites':'Convites', 'settings.help':'Ajuda & Segurança',
     },
     en:{
-      'nav.principal':'Main', 'nav.inicio':'Home', 'nav.dashboard':'Dashboard',
+      'nav.principal':'Main', 'nav.inicio':'Home', 'nav.home':'Home', 'nav.dashboard':'Dashboard',
       'nav.operacao':'Operations', 'nav.clientes':'Clients', 'nav.tarefas':'OneTasks', 'nav.crm':'CRM', 'nav.metaads':'Meta Ads', 'nav.planejamento':'Content Plan',
       'nav.gestao':'Management', 'nav.equipe':'Team', 'nav.eventos':'Events', 'nav.reuniao':'Meetings', 'nav.metas':'Goals', 'nav.relatorios':'Reports',
       'nav.admin':'Admin', 'nav.financeiro':'Finance', 'nav.contratos':'Contracts', 'nav.arquivos':'Files',

@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/app.css">
 <style>
@@ -22,6 +22,24 @@
   .funnel-legend i{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
   .funnel-bar{display:flex;height:14px;border-radius:8px;overflow:hidden;}
   @media (max-width:980px){ .dash-grid{grid-template-columns:1fr;} }
+
+  .kpi-card.hero{background:linear-gradient(155deg,var(--wine),#4A0C16);border-color:transparent;color:#FBF3E3;}
+  .kpi-card.hero .kpi-label{color:rgba(251,243,227,.7);}
+  .kpi-card.hero .kpi-value{color:#FBF3E3;}
+  .kpi-card.hero .info-tip{color:rgba(251,243,227,.7);border-color:rgba(251,243,227,.4);}
+
+  .goals-progress-wrap{display:flex;gap:28px;align-items:center;flex-wrap:wrap;}
+  .progress-ring-wrap{flex-shrink:0;position:relative;width:132px;height:132px;}
+  .progress-ring-wrap svg{transform:rotate(-90deg);}
+  .progress-ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+  .progress-ring-label b{font-family:'Space Grotesk',sans-serif;font-size:26px;}
+  .progress-ring-label span{font-size:11px;color:var(--ink-3);text-align:center;max-width:90px;}
+  .goals-list{flex:1;min-width:220px;}
+
+  .team-row-list{display:flex;flex-direction:column;gap:14px;}
+  .team-row{display:flex;align-items:center;gap:12px;}
+  .team-row .tr-name{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;}
+  .team-row .tr-sub{font-size:11.5px;color:var(--ink-3);}
 </style>
 </head>
 <body>
@@ -54,14 +72,23 @@
       <div id="boardBars"></div>
     </div>
     <div class="panel">
-      <div class="panel-head"><h3>Próximos eventos & reuniões</h3></div>
-      <div id="dashAlerts"></div>
+      <div class="panel-head"><h3>Equipe</h3></div>
+      <div class="team-row-list" id="teamList"></div>
     </div>
   </div>
 
-  <div class="panel">
-    <div class="panel-head"><h3>Progresso das metas</h3></div>
-    <div id="goalsProgress"></div>
+  <div class="dash-grid">
+    <div class="panel">
+      <div class="panel-head"><h3>Progresso das metas</h3></div>
+      <div class="goals-progress-wrap">
+        <div class="progress-ring-wrap" id="goalsRing"></div>
+        <div class="goals-list" id="goalsProgress"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h3>Próximos eventos & reuniões</h3></div>
+      <div id="dashAlerts"></div>
+    </div>
   </div>
 </div>
 <script src="assets/js/store.js"></script>

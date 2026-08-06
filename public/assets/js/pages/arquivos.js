@@ -4,6 +4,26 @@
 
   let currentFolderId = null;
   let justDragged = false;
+  const pendingDeleteFolder = new Set();
+  const pendingDeleteFile = new Set();
+
+  function deleteFolderWithUndo(f){
+    pendingDeleteFolder.add(f.id);
+    renderAll();
+    Util.toastUndo(`Pasta "${f.name}" removida.`, async () => {
+      pendingDeleteFolder.delete(f.id);
+      await Store.remove('folders', f.id);
+    }, { onUndo: () => { pendingDeleteFolder.delete(f.id); renderAll(); } });
+  }
+
+  function deleteFileWithUndo(f){
+    pendingDeleteFile.add(f.id);
+    renderAll();
+    Util.toastUndo(`"${f.name}" removido.`, async () => {
+      pendingDeleteFile.delete(f.id);
+      await Store.remove('files', f.id);
+    }, { onUndo: () => { pendingDeleteFile.delete(f.id); renderAll(); } });
+  }
 
   function breadcrumbChain(){
     const chain = [];
@@ -49,8 +69,8 @@
   }
 
   function render(){
-    const folders = Store.list('folders').filter(f => f.parentId === currentFolderId).sort((a,b)=>(a.order||0)-(b.order||0));
-    const files = Store.list('files').filter(f => f.parentId === currentFolderId).sort((a,b)=>(a.order||0)-(b.order||0));
+    const folders = Store.list('folders').filter(f => f.parentId === currentFolderId && !pendingDeleteFolder.has(f.id)).sort((a,b)=>(a.order||0)-(b.order||0));
+    const files = Store.list('files').filter(f => f.parentId === currentFolderId && !pendingDeleteFile.has(f.id)).sort((a,b)=>(a.order||0)-(b.order||0));
 
     const folderGrid = document.getElementById('folderGrid');
     folderGrid.innerHTML = folders.length ? folders.map(folderTileHtml).join('') : '<p class="text-faint text-sm">Nenhuma subpasta aqui.</p>';
@@ -91,7 +111,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deleteFolderBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir a pasta "${f.name}" e tudo dentro dela?`, async () => { await Store.remove('folders', f.id); Util.closeModal(); renderAll(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir a pasta "${f.name}" e tudo dentro dela?`, () => { Util.closeModal(); deleteFolderWithUndo(f); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#saveFolderBtn').addEventListener('click', async () => {
       const name = modal.querySelector('#fdName').value.trim();
@@ -125,7 +145,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deleteFileBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir "${f.name}"?`, async () => { await Store.remove('files', f.id); Util.closeModal(); renderAll(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir "${f.name}"?`, () => { Util.closeModal(); deleteFileWithUndo(f); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#saveFileBtn').addEventListener('click', async () => {
       const name = modal.querySelector('#fiName').value.trim();

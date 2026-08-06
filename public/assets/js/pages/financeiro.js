@@ -2,6 +2,27 @@
   if(!(await Shell.mount('financeiro'))) return;
   await Store.preload(['finance','users']);
 
+  const pendingDeleteCompany = new Set();
+  const pendingDeletePayroll = new Set();
+
+  function deleteCompanyItemWithUndo(c){
+    pendingDeleteCompany.add(c.id);
+    renderEmpresa();
+    Util.toastUndo(`"${c.label}" removido.`, async () => {
+      pendingDeleteCompany.delete(c.id);
+      await Store.removeFinance('company', c.id);
+    }, { onUndo: () => { pendingDeleteCompany.delete(c.id); renderEmpresa(); } });
+  }
+
+  function deletePayrollItemWithUndo(p, name){
+    pendingDeletePayroll.add(p.id);
+    renderPayroll();
+    Util.toastUndo(`"${name}" removido da folha.`, async () => {
+      pendingDeletePayroll.delete(p.id);
+      await Store.removeFinance('payroll', p.id);
+    }, { onUndo: () => { pendingDeletePayroll.delete(p.id); renderPayroll(); } });
+  }
+
   document.querySelectorAll('#finTabs .tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('#finTabs .tab-btn').forEach(b=>b.classList.remove('active'));
@@ -12,7 +33,7 @@
   });
 
   function renderEmpresa(){
-    const company = Store.get('finance').company || [];
+    const company = (Store.get('finance').company || []).filter(c => !pendingDeleteCompany.has(c.id));
     const receita = company.filter(c=>c.type==='receita').reduce((s,c)=>s+c.value,0);
     const despesa = company.filter(c=>c.type==='despesa').reduce((s,c)=>s+c.value,0);
     document.getElementById('empresaKpis').innerHTML = [
@@ -36,7 +57,8 @@
 
     document.querySelectorAll('.edit-company-btn').forEach(b => b.addEventListener('click', () => openCompanyForm((Store.get('finance').company||[]).find(x=>x.id===b.dataset.id))));
     document.querySelectorAll('.delete-company-btn').forEach(b => b.addEventListener('click', () => {
-      Util.confirmModal('Excluir este lançamento?', async () => { await Store.removeFinance('company', b.dataset.id); renderEmpresa(); }, { danger:true, okLabel:'Excluir' });
+      const c = (Store.get('finance').company||[]).find(x=>x.id===b.dataset.id);
+      Util.confirmModal('Excluir este lançamento?', () => deleteCompanyItemWithUndo(c), { danger:true, okLabel:'Excluir' });
     }));
   }
 
@@ -70,7 +92,7 @@
   document.getElementById('addCompanyBtn').addEventListener('click', () => openCompanyForm(null));
 
   function renderPayroll(){
-    const payroll = Store.get('finance').payroll || [];
+    const payroll = (Store.get('finance').payroll || []).filter(p => !pendingDeletePayroll.has(p.id));
     const total = payroll.reduce((s,p)=>s+p.salary,0);
     document.getElementById('payrollKpis').innerHTML = [
       { label:'Folha total mensal', value:Util.formatCurrency(total) },
@@ -95,7 +117,9 @@
 
     document.querySelectorAll('.edit-payroll-btn').forEach(b => b.addEventListener('click', () => openPayrollForm((Store.get('finance').payroll||[]).find(x=>x.id===b.dataset.id))));
     document.querySelectorAll('.delete-payroll-btn').forEach(b => b.addEventListener('click', () => {
-      Util.confirmModal('Remover da folha de pagamento?', async () => { await Store.removeFinance('payroll', b.dataset.id); renderPayroll(); }, { danger:true, okLabel:'Remover' });
+      const p = (Store.get('finance').payroll||[]).find(x=>x.id===b.dataset.id);
+      const u = Store.find('users', p.userId);
+      Util.confirmModal('Remover da folha de pagamento?', () => deletePayrollItemWithUndo(p, u?u.name:'Colaborador'), { danger:true, okLabel:'Remover' });
     }));
   }
 

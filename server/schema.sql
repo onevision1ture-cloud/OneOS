@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS cargos (
   id TEXT PRIMARY KEY,
   name TEXT NOT NULL,
   "isAdmin" BOOLEAN NOT NULL DEFAULT FALSE,
-  description TEXT
+  description TEXT,
+  pages JSONB NOT NULL DEFAULT '"all"'
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -36,6 +37,7 @@ CREATE TABLE IF NOT EXISTS clients (
   platforms JSONB NOT NULL DEFAULT '[]',
   contact JSONB NOT NULL DEFAULT '{}',
   notes TEXT,
+  logo TEXT,
   "order" INTEGER NOT NULL DEFAULT 0
 );
 
@@ -67,6 +69,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   status TEXT NOT NULL DEFAULT 'Não iniciado',
   date TEXT,
   priority TEXT NOT NULL DEFAULT 'Média',
+  type TEXT,
   notes TEXT,
   "order" INTEGER NOT NULL DEFAULT 0
 );
@@ -75,6 +78,7 @@ CREATE TABLE IF NOT EXISTS board_chats (
   id TEXT PRIMARY KEY,
   "boardId" TEXT NOT NULL REFERENCES boards(id) ON DELETE CASCADE,
   "authorId" TEXT,
+  "toUserId" TEXT,
   text TEXT NOT NULL,
   "createdAt" TEXT NOT NULL
 );

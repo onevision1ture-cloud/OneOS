@@ -6,26 +6,23 @@
   const STATUS_COLOR = { Ideia:'#8C8378', Rascunho:'#B9791F', Aprovado:'#3E6FB0', Publicado:'#2F8F5B' };
   const DOW = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
 
-  let view = 'month';
   let cursor = new Date(); cursor.setHours(0,0,0,0);
+  const pendingDelete = new Set();
+
+  function deletePostWithUndo(p){
+    pendingDelete.add(p.id);
+    renderAll();
+    Util.toastUndo(`"${p.title}" removido.`, async () => {
+      pendingDelete.delete(p.id);
+      await Store.remove('planningPosts', p.id);
+    }, { onUndo: () => { pendingDelete.delete(p.id); renderAll(); } });
+  }
 
   function pad(n){ return String(n).padStart(2,'0'); }
   function fmtISO(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
   function todayISO(){ return fmtISO(new Date()); }
   function startOfWeek(d){ const nd = new Date(d); const day = (nd.getDay()+6)%7; nd.setDate(nd.getDate()-day); return nd; }
 
-  function monthGridDays(d){
-    const first = new Date(d.getFullYear(), d.getMonth(), 1);
-    const start = startOfWeek(first);
-    const days = [];
-    const cur = new Date(start);
-    while(days.length < 42){
-      days.push(new Date(cur));
-      cur.setDate(cur.getDate()+1);
-      if(days.length % 7 === 0 && cur.getMonth() !== d.getMonth() && cur > first && days.length >= 28) break;
-    }
-    return days;
-  }
   function weekDays(d){
     const start = startOfWeek(d);
     return Array.from({length:7}, (_,i) => { const nd = new Date(start); nd.setDate(nd.getDate()+i); return nd; });
@@ -39,53 +36,32 @@
   }
 
   function renderTodayBanner(){
-    const todays = Store.list('planningPosts').filter(p => p.date === todayISO());
+    const todays = Store.list('planningPosts').filter(p => p.date === todayISO() && !pendingDelete.has(p.id));
     document.getElementById('todayCount').textContent = todays.length ? `${todays.length} conteúdo${todays.length===1?'':'s'} para publicar hoje` : 'Nada para publicar hoje';
     document.getElementById('todayList').textContent = todays.map(p=>p.title).join(' · ') || 'Aproveite pra planejar os próximos dias.';
   }
 
   function renderNavLabel(){
     const label = document.getElementById('navLabel');
-    if(view === 'month'){
-      label.textContent = cursor.toLocaleDateString('pt-BR', { month:'long', year:'numeric' });
-    } else {
-      const days = weekDays(cursor);
-      label.textContent = `${days[0].getDate()} — ${days[6].getDate()} ${days[6].toLocaleDateString('pt-BR',{month:'short'})}`;
-    }
+    const days = weekDays(cursor);
+    label.textContent = `${days[0].getDate()} — ${days[6].getDate()} ${days[6].toLocaleDateString('pt-BR',{month:'short'})}`;
   }
 
   function renderCalendar(){
     const wrap = document.getElementById('calendarWrap');
-    if(view === 'month'){
-      const days = monthGridDays(cursor);
-      wrap.innerHTML = `<div class="calendar-grid">
-        ${DOW.map(d=>`<div class="calendar-dow">${d}</div>`).join('')}
-        ${days.map(d => {
-          const iso = fmtISO(d);
-          const isOther = d.getMonth() !== cursor.getMonth();
-          const isToday = iso === todayISO();
-          const posts = Store.list('planningPosts').filter(p=>p.date===iso).sort((a,b)=>(a.order||0)-(b.order||0));
-          return `<div class="calendar-cell ${isOther?'other-month':''} ${isToday?'today':''}">
-            <span class="c-date">${d.getDate()}</span>
-            <div class="day-posts" data-date="${iso}" style="flex:1;">${posts.map(postCardHtml).join('')}</div>
-          </div>`;
-        }).join('')}
-      </div>`;
-    } else {
-      const days = weekDays(cursor);
-      wrap.innerHTML = `<div class="week-strip">
-        ${days.map(d => {
-          const iso = fmtISO(d);
-          const isToday = iso === todayISO();
-          const posts = Store.list('planningPosts').filter(p=>p.date===iso).sort((a,b)=>(a.order||0)-(b.order||0));
-          return `<div class="week-day ${isToday?'today':''}">
-            <div class="wd-label">${DOW[(d.getDay()+6)%7]}</div>
-            <div class="wd-date">${d.getDate()}</div>
-            <div class="day-posts" data-date="${iso}">${posts.map(postCardHtml).join('')}</div>
-          </div>`;
-        }).join('')}
-      </div>`;
-    }
+    const days = weekDays(cursor);
+    wrap.innerHTML = `<div class="week-strip">
+      ${days.map(d => {
+        const iso = fmtISO(d);
+        const isToday = iso === todayISO();
+        const posts = Store.list('planningPosts').filter(p=>p.date===iso && !pendingDelete.has(p.id)).sort((a,b)=>(a.order||0)-(b.order||0));
+        return `<div class="week-day ${isToday?'today':''}">
+          <div class="wd-label">${DOW[(d.getDay()+6)%7]}</div>
+          <div class="wd-date">${d.getDate()}</div>
+          <div class="day-posts" data-date="${iso}">${posts.map(postCardHtml).join('')}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
 
     wrap.querySelectorAll('.plan-post').forEach(el => el.addEventListener('click', () => openPostForm(Store.find('planningPosts', el.dataset.id))));
 
@@ -106,22 +82,8 @@
     renderTodayBanner();
   }
 
-  document.querySelectorAll('#viewTabs .tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#viewTabs .tab-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      view = btn.dataset.view;
-      renderAll();
-    });
-  });
-  document.getElementById('prevBtn').addEventListener('click', () => {
-    if(view==='month') cursor.setMonth(cursor.getMonth()-1); else cursor.setDate(cursor.getDate()-7);
-    renderAll();
-  });
-  document.getElementById('nextBtn').addEventListener('click', () => {
-    if(view==='month') cursor.setMonth(cursor.getMonth()+1); else cursor.setDate(cursor.getDate()+7);
-    renderAll();
-  });
+  document.getElementById('prevBtn').addEventListener('click', () => { cursor.setDate(cursor.getDate()-7); renderAll(); });
+  document.getElementById('nextBtn').addEventListener('click', () => { cursor.setDate(cursor.getDate()+7); renderAll(); });
 
   function openPostForm(post){
     const isEdit = !!post;
@@ -146,7 +108,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deletePostBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir "${p.title}"?`, async () => { await Store.remove('planningPosts', p.id); Util.closeModal(); renderAll(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir "${p.title}"?`, () => { Util.closeModal(); deletePostWithUndo(p); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#savePostBtn').addEventListener('click', async () => {
       const title = modal.querySelector('#pTitle').value.trim();

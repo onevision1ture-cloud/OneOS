@@ -4,6 +4,16 @@
 
   const DOW = ['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'];
   let cursor = new Date(); cursor.setHours(0,0,0,0);
+  const pendingDelete = new Set();
+
+  function deleteMeetingWithUndo(m){
+    pendingDelete.add(m.id);
+    render();
+    Util.toastUndo(`Reunião "${m.title}" removida.`, async () => {
+      pendingDelete.delete(m.id);
+      await Store.remove('meetings', m.id);
+    }, { onUndo: () => { pendingDelete.delete(m.id); render(); } });
+  }
 
   function pad(n){ return String(n).padStart(2,'0'); }
   function fmtISO(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
@@ -29,7 +39,7 @@
   function render(){
     const days = monthGridDays(cursor);
     const events = Store.list('events');
-    const meetings = Store.list('meetings');
+    const meetings = Store.list('meetings').filter(m => !pendingDelete.has(m.id));
     const wrap = document.getElementById('calendarWrap');
     wrap.innerHTML = `<div class="calendar-grid">
       ${DOW.map(d=>`<div class="calendar-dow">${d}</div>`).join('')}
@@ -85,7 +95,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deleteMeetingBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir a reunião "${m.title}"?`, async () => { await Store.remove('meetings', m.id); Util.closeModal(); render(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir a reunião "${m.title}"?`, () => { Util.closeModal(); deleteMeetingWithUndo(m); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#saveMeetingBtn').addEventListener('click', async () => {
       const title = modal.querySelector('#mTitle').value.trim();

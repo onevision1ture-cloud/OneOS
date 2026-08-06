@@ -2,6 +2,16 @@
   if(!(await Shell.mount('eventos'))) return;
   await Store.preload(['events']);
 
+  const pendingDelete = new Set();
+  function deleteEventWithUndo(e){
+    pendingDelete.add(e.id);
+    render();
+    Util.toastUndo(`Evento "${e.title}" removido.`, async () => {
+      pendingDelete.delete(e.id);
+      await Store.remove('events', e.id);
+    }, { onUndo: () => { pendingDelete.delete(e.id); render(); } });
+  }
+
   function eventCardHtml(e){
     const d = new Date(e.date+'T00:00:00');
     const rel = Util.relativeDay(e.date);
@@ -20,14 +30,14 @@
   }
 
   function render(){
-    const events = Store.list('events').slice().sort((a,b)=>(a.order||0)-(b.order||0));
+    const events = Store.list('events').filter(e => !pendingDelete.has(e.id)).slice().sort((a,b)=>(a.order||0)-(b.order||0));
     const list = document.getElementById('eventsList');
     list.innerHTML = events.length ? events.map(eventCardHtml).join('') :
       `<div class="empty-state"><h4>Nenhum evento cadastrado</h4><p>Adicione o primeiro evento da agência.</p></div>`;
     list.querySelectorAll('.edit-event-btn').forEach(b => b.addEventListener('click', () => openEventForm(Store.find('events', b.dataset.id))));
     list.querySelectorAll('.delete-event-btn').forEach(b => b.addEventListener('click', () => {
       const e = Store.find('events', b.dataset.id);
-      Util.confirmModal(`Excluir o evento "${e.title}"?`, async () => { await Store.remove('events', e.id); render(); Util.toast('Evento removido.'); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir o evento "${e.title}"?`, () => deleteEventWithUndo(e), { danger:true, okLabel:'Excluir' });
     }));
     DragDrop.enable([list], {
       itemSelector:'.event-card',
@@ -61,7 +71,7 @@
     const modal = document.querySelector('.overlay-layer .modal');
     modal.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click', Util.closeModal));
     if(isEdit) modal.querySelector('#deleteEventBtn').addEventListener('click', () => {
-      Util.confirmModal(`Excluir o evento "${e.title}"?`, async () => { await Store.remove('events', e.id); Util.closeModal(); render(); }, { danger:true, okLabel:'Excluir' });
+      Util.confirmModal(`Excluir o evento "${e.title}"?`, () => { Util.closeModal(); deleteEventWithUndo(e); }, { danger:true, okLabel:'Excluir' });
     });
     modal.querySelector('#saveEventBtn').addEventListener('click', async () => {
       const title = modal.querySelector('#evTitle').value.trim();

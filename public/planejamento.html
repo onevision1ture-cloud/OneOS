@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%236E1220'/%3E%3Ctext x='50' y='68' font-family='Georgia,serif' font-style='italic' font-size='58' fill='%23FAF6EF' text-anchor='middle'%3EO%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital,wght@0,400;1,400&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/tokens.css">
 <link rel="stylesheet" href="assets/css/app.css">
 <style>
@@ -18,18 +18,17 @@
   .today-banner b{font-family:'Space Grotesk',sans-serif;font-size:14px;}
   .cal-nav{display:flex;align-items:center;gap:10px;}
   .cal-nav button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line-strong);}
-  .cal-nav span{font-family:'Instrument Serif',serif;font-style:italic;font-size:19px;min-width:160px;text-align:center;}
+  .cal-nav span{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;min-width:160px;text-align:center;}
   .plan-post{
     background:var(--panel-bg);border:1px solid var(--line);border-left:3px solid var(--wine);border-radius:8px;padding:6px 8px;margin-bottom:5px;cursor:grab;
-    font-size:11px;font-family:'Space Grotesk',sans-serif;
-  }
+    font-size:11px;font-family:'Space Grotesk',sans-serif;box-shadow:var(--shadow-sm);}
   .plan-post b{display:block;font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .plan-post .p-type{color:var(--ink-3);font-size:10px;}
   .week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;}
   .week-day{background:var(--panel-bg);border:1px solid var(--line);border-radius:16px;padding:12px;min-height:220px;}
   .week-day.today{box-shadow:inset 0 0 0 2px var(--wine);}
   .week-day .wd-label{font-family:'Space Grotesk',sans-serif;font-size:11.5px;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px;}
-  .week-day .wd-date{font-family:'Instrument Serif',serif;font-style:italic;font-size:20px;margin-bottom:10px;}
+  .week-day .wd-date{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;margin-bottom:10px;}
 </style>
 </head>
 <body>
@@ -38,7 +37,7 @@
   <div class="page-head">
     <div>
       <h1>Planejamento de <em>conteúdo</em></h1>
-      <p>Calendário semanal e mensal da Onevision — arraste os posts pra reorganizar.</p>
+      <p>Calendário semanal da Onevision — arraste os posts pra reorganizar.</p>
     </div>
     <div class="page-head-actions">
       <a href="https://instagram.com/onevision1ture" target="_blank" rel="noopener" class="btn btn-ghost">Ver Instagram da Onevision</a>
@@ -52,10 +51,7 @@
   </div>
 
   <div class="page-head" style="margin-bottom:16px;">
-    <div class="tabs" id="viewTabs" style="margin-bottom:0;">
-      <button class="tab-btn active" data-view="month">Mensal</button>
-      <button class="tab-btn" data-view="week">Semanal</button>
-    </div>
+    <div></div>
     <div class="cal-nav">
       <button id="prevBtn">‹</button>
       <span id="navLabel"></span>

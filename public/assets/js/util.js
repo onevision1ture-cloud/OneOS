@@ -109,6 +109,63 @@
     setTimeout(() => { el.style.opacity='0'; el.style.transform='translateY(8px)'; el.style.transition='opacity .3s, transform .3s'; setTimeout(()=>el.remove(), 300); }, 2600);
   }
 
+  /* ---------- Toast com "Desfazer" ---------- */
+  function toastUndo(message, onCommit, opts){
+    opts = opts || {};
+    const delay = opts.delay || 5000;
+    if(!toastStack){
+      toastStack = document.createElement('div');
+      toastStack.className = 'toast-stack';
+      document.body.appendChild(toastStack);
+    }
+    const el = document.createElement('div');
+    el.className = 'toast toast-undo';
+    el.innerHTML = `<span>${escapeHtml(message)}</span><button type="button" class="toast-undo-btn">Desfazer</button><div class="toast-undo-bar"><b></b></div>`;
+    toastStack.appendChild(el);
+    let done = false;
+    const bar = el.querySelector('.toast-undo-bar b');
+    requestAnimationFrame(() => {
+      bar.style.transition = `width ${delay}ms linear`;
+      requestAnimationFrame(() => { bar.style.width = '0%'; });
+    });
+    const timer = setTimeout(async () => {
+      if(done) return;
+      done = true;
+      el.style.opacity = '0'; el.style.transform = 'translateY(8px)'; el.style.transition = 'opacity .3s, transform .3s';
+      setTimeout(() => el.remove(), 300);
+      await onCommit();
+    }, delay);
+    el.querySelector('.toast-undo-btn').addEventListener('click', () => {
+      if(done) return;
+      done = true;
+      clearTimeout(timer);
+      el.remove();
+      if(opts.onUndo) opts.onUndo();
+    });
+  }
+
+  /* ---------- Mini menu de contexto (⋯) ---------- */
+  function openMiniMenu(anchorEl, items){
+    document.querySelectorAll('.mini-menu').forEach(m => m.remove());
+    const menu = document.createElement('div');
+    menu.className = 'mini-menu';
+    menu.innerHTML = items.map((it,i) => `<button type="button" class="mini-menu-item ${it.danger?'danger':''}" data-i="${i}">${escapeHtml(it.label)}</button>`).join('');
+    document.body.appendChild(menu);
+    const r = anchorEl.getBoundingClientRect();
+    menu.style.top = (window.scrollY + r.bottom + 6) + 'px';
+    menu.style.left = (window.scrollX + r.right - menu.offsetWidth) + 'px';
+    menu.querySelectorAll('.mini-menu-item').forEach(btn => btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      items[Number(btn.dataset.i)].onClick();
+      menu.remove();
+    }));
+    setTimeout(() => {
+      document.addEventListener('click', function closeOnce(e){
+        if(!menu.contains(e.target)){ menu.remove(); document.removeEventListener('click', closeOnce); }
+      });
+    }, 0);
+  }
+
   /* ---------- Tooltip tap-to-toggle (touch) ---------- */
   function initTooltips(root){
     (root||document).querySelectorAll('.info-tip').forEach(tip => {
@@ -130,6 +187,6 @@
     escapeHtml, initials,
     openModal, closeModal, confirmModal,
     openDrawer, closeDrawer,
-    toast, initTooltips,
+    toast, toastUndo, initTooltips, openMiniMenu,
   };
 })();
