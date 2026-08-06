@@ -42,7 +42,10 @@ app.use('/api', requireAuth, resourcesRouter);
 app.use('/api/finance', requireAuth, financeRouter);
 app.use('/api/settings', requireAuth, settingsRouter);
 
-app.use(express.static(path.join(__dirname, '..', 'public')));
+app.use(express.static(path.join(__dirname, '..', 'public'), {
+  maxAge: process.env.NODE_ENV === 'production' ? '1h' : 0,
+  etag: true,
+}));
 
 app.use((req, res) => {
   if(req.path.startsWith('/api') || req.path.startsWith('/auth')) return res.status(404).json({ error:'not_found' });

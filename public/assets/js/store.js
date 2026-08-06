@@ -72,6 +72,20 @@
     uid, isoDate, daysFromNow,
     preload,
 
+    // Usado pelo Shell.mount(): busca sessao + cargos + eventos + reunioes + config
+    // numa unica ida ao servidor, em vez de varias chamadas sequenciais.
+    async bootstrapShell(){
+      const data = await http('GET', '/api/session/bootstrap');
+      singletons.session = { loggedIn: data.loggedIn, userId: data.user ? data.user.id : null };
+      singletons.sessionUser = data.user || null;
+      cache.cargos = data.cargos || [];
+      cache.events = data.events || [];
+      cache.meetings = data.meetings || [];
+      singletons.settings = normalizeSettings(data.settings || { theme:'light', language:'pt', notifications:{}, sidebarCollapsed:false });
+      singletons.config = data.config || { googleEnabled:false };
+      return data.loggedIn;
+    },
+
     list(key){ return cache[key] || []; },
     find(key, id){ return (cache[key] || []).find(x => x.id === id); },
 

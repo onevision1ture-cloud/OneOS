@@ -241,12 +241,11 @@
   }
 
   async function mountInner(activeKey){
-    await Store.preload(['session']);
-    if(!Store.get('session').loggedIn){
+    const loggedIn = await Store.bootstrapShell();
+    if(!loggedIn){
       location.href = 'index.html';
       return false;
     }
-    await Store.preload(['cargos','events','meetings','settings']);
     applyTheme();
 
     const pageContent = document.getElementById('page-content');

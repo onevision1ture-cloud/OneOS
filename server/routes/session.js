@@ -29,6 +29,30 @@ router.get('/me', (req, res) => {
   }
 });
 
+// Junta em UMA unica ida ao servidor tudo que o Shell.mount() precisa pra montar a
+// pagina (sessao + cargos + eventos + reunioes + configuracoes) — evita varias idas e
+// voltas sequenciais, cada uma pagando a latencia ate o banco.
+router.get('/bootstrap', async (req, res, next) => {
+  try{
+    const loggedIn = !!(req.isAuthenticated && req.isAuthenticated());
+    if(!loggedIn){
+      return res.json({ loggedIn:false, user:null, cargos:[], events:[], meetings:[], settings:null, config:{ googleEnabled } });
+    }
+    const [cargosR, eventsR, meetingsR, settingsR] = await Promise.all([
+      query('SELECT * FROM cargos'),
+      query('SELECT * FROM events ORDER BY "order" ASC'),
+      query('SELECT * FROM meetings'),
+      query(`SELECT * FROM settings WHERE id='global'`),
+    ]);
+    res.json({
+      loggedIn:true, user:req.user,
+      cargos:cargosR.rows, events:eventsR.rows, meetings:meetingsR.rows,
+      settings: settingsR.rows[0] || { id:'global', theme:'light', language:'pt', notifications:{}, sidebarCollapsed:false },
+      config:{ googleEnabled },
+    });
+  }catch(e){ next(e); }
+});
+
 router.post('/login-email', async (req, res, next) => {
   try{
     const email = (req.body.email || '').trim().toLowerCase();
