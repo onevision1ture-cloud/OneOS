@@ -312,6 +312,7 @@
       </div>
     `;
     document.body.appendChild(shell);
+    pageContent.style.display = 'block';
     document.getElementById('pageMain').appendChild(pageContent);
 
     document.getElementById('sidebarCollapseBtn').addEventListener('click', async () => {
