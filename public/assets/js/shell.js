@@ -192,6 +192,29 @@
     document.querySelectorAll('.popover.open').forEach(p => p.classList.remove('open'));
   }
 
+  function injectPageLoader(){
+    if(document.getElementById('pageBootScreen')) return;
+    const boot = document.createElement('div');
+    boot.className = 'boot-screen';
+    boot.id = 'pageBootScreen';
+    boot.innerHTML = `
+      <div class="boot-orbit-wrap">
+        <div class="boot-orbit o1"></div>
+        <div class="boot-orbit o2"></div>
+        <div class="boot-mark">O</div>
+      </div>
+      <div class="boot-text">One<span class="v">vision</span> OS</div>
+      <div class="boot-sub">Carregando…</div>
+    `;
+    document.body.appendChild(boot);
+  }
+  function removePageLoader(){
+    const boot = document.getElementById('pageBootScreen');
+    if(!boot) return;
+    boot.classList.add('fade-out');
+    setTimeout(() => boot.remove(), 650);
+  }
+
   function showFatalError(err){
     console.error('Shell.mount falhou:', err);
     document.body.innerHTML = `
@@ -208,6 +231,7 @@
   }
 
   async function mount(activeKey){
+    injectPageLoader();
     try{
       return await mountInner(activeKey);
     }catch(err){
@@ -314,6 +338,7 @@
     document.body.appendChild(shell);
     pageContent.style.display = 'block';
     document.getElementById('pageMain').appendChild(pageContent);
+    removePageLoader();
 
     document.getElementById('sidebarCollapseBtn').addEventListener('click', async () => {
       shell.classList.toggle('collapsed');
