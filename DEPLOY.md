@@ -34,12 +34,12 @@ Google, que o sistema novo não usa (ele tem tela de login própria).
 
 ## 2. Adicionar as variáveis novas
 
-Ainda em **Variables**, clique em **New Variable** e adicione estas seis.
-`DATABASE_URL` já existe, então não precisa criar de novo.
+Ainda em **Variables**, clique em **New Variable** e adicione:
 
 | Variável | Valor |
 |---|---|
-| `DIRECT_URL` | copie o mesmo valor que está em `DATABASE_URL` |
+| `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` (o banco NOVO) |
+| `DIRECT_URL` | o mesmo valor de `DATABASE_URL` |
 | `AUTH_SECRET` | gere no passo abaixo |
 | `AUTH_URL` | a URL pública do serviço (passo 4) |
 | `SEED_ADMIN_EMAIL` | `alissonmachado@onevision.com` |
@@ -47,18 +47,12 @@ Ainda em **Variables**, clique em **New Variable** e adicione estas seis.
 | `SEED_ADMIN_NAME` | `Alisson Machado` |
 | `ACESSO_SENHA_PADRAO` | a mesma senha acima |
 
-> **Como copiar o `DATABASE_URL`:** clique nos três pontos ao lado dela e
-> escolha "Copy". Se o valor aparecer como `${{Postgres.DATABASE_URL}}`, cole
-> exatamente isso em `DIRECT_URL`. Se aparecer a conexão completa
-> (`postgresql://...`), cole a conexão.
->
-> As duas apontam para o mesmo banco: o Prisma usa uma para o app e outra
+> **`DATABASE_URL` e `DIRECT_URL` levam o mesmo valor**, apontando para o
+> banco novo (veja a seção seguinte). O Prisma usa uma para o app e outra
 > para criar as tabelas.
-
-> **`DATABASE_URL` provavelmente já existe** apontando para o Postgres do
-> sistema antigo. Pode manter. Só confira se o valor é
-> `${{Postgres.DATABASE_URL}}`; se o serviço de banco tiver outro nome no
-> seu projeto, use o nome real, por exemplo `${{postgres-abc.DATABASE_URL}}`.
+>
+> Se o serviço de banco tiver outro nome no seu projeto, use o nome real:
+> `${{postgres-abc.DATABASE_URL}}`, por exemplo.
 
 ### Use um banco vazio, só para este sistema
 
