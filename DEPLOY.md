@@ -129,6 +129,21 @@ O Railway ainda está com a configuração antiga em cache. Vá em
 **Settings → Build** e confira se não há um "Node Version" fixado em 18.
 Se houver, apague o campo: o `nixpacks.toml` do projeto cuida disso.
 
+**"EBUSY: resource busy or locked, rmdir '/app/node_modules/.cache'"**
+Resolvido no projeto, mas se voltar é cache velho do Railway. Vá em
+**Settings → Danger → Clear build cache** e faça um Redeploy.
+
+Confira também, em **Settings → Build**, se o campo "Custom Build Command"
+está **vazio**. Se tiver algo escrito (por exemplo `npm ci && npm run build`,
+do sistema antigo), apague: o `nixpacks.toml` do projeto já define tudo, e um
+comando ali sobrescreve as configurações dele, inclusive a versão do Node.
+
+**O site mostra o sistema antigo**
+Isso é sinal de que o build falhou: o Railway continua servindo a última
+versão que funcionou. Abra **Deployments**, veja o log do deploy vermelho e
+corrija o erro apontado lá. Não é o GitHub: confira em
+github.com/onevision1ture-cloud/OneOS que só existe o sistema novo.
+
 **"Can't reach database server"**
 `DATABASE_URL` não aponta para o banco. Confira a sintaxe
 `${{NomeDoServico.DATABASE_URL}}`, com as duas chaves.
