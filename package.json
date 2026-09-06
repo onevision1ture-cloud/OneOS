@@ -9,7 +9,7 @@
     "dev": "node scripts/dev.mjs",
     "dev:db": "node scripts/dev-db.mjs",
     "build": "prisma generate && next build",
-    "start": "next start",
+    "start": "node scripts/start.mjs",
     "lint": "eslint",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
@@ -21,7 +21,8 @@
     "backup": "node scripts/backup.mjs",
     "limpar": "node scripts/limpar.mjs",
     "acessos": "node scripts/acessos.mjs",
-    "deploy:setup": "prisma db push && tsx prisma/seed.ts"
+    "deploy:setup": "prisma db push && tsx prisma/seed.ts",
+    "start:next": "next start"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
