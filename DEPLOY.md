@@ -107,18 +107,30 @@ ferramentas de compilação, os dois motivos que faziam o build falhar antes.
 
 ---
 
-## 5. Preparar o banco
+## 5. O banco se prepara sozinho
 
-Com o deploy verde, rode uma vez para criar as tabelas e os acessos.
+Não há passo manual aqui. Toda vez que o sistema inicia, ele:
 
-Pelo terminal do Railway (aba do serviço, botão de terminal), ou pelo CLI:
+1. cria ou atualiza as tabelas
+2. cria os cargos e as etapas do CRM
+3. cria os dois acessos da equipe
 
-```bash
-npm run deploy:setup   # cria tabelas, cargos e o primeiro acesso
-npm run acessos        # deixa só os dois acessos da equipe
+As três etapas são seguras de repetir, então valem no primeiro deploy e em
+todos os seguintes, sem duplicar nada. Você vê isso no log do deploy:
+
+```
+[one-os] preparando o banco de dados...
+[one-os] tabelas em dia.
+[one-os] cargos e acesso inicial prontos.
+[one-os] acessos da equipe em dia.
+[one-os] iniciando o servidor...
 ```
 
-Pronto. Acesse a URL e entre com um dos dois e-mails.
+Acesse a URL e entre com um dos dois e-mails.
+
+> **Os dados ficam salvos.** Um novo deploy não apaga nada: o banco é
+> separado do sistema. Clientes, leads, tarefas e tudo o mais continuam lá
+> a cada atualização.
 
 ---
 
@@ -149,7 +161,9 @@ github.com/onevision1ture-cloud/OneOS que só existe o sistema novo.
 `${{NomeDoServico.DATABASE_URL}}`, com as duas chaves.
 
 **Login diz que não consegue falar com o banco**
-As tabelas ainda não existem: rode `npm run deploy:setup` (passo 5).
+O sistema não alcança o Postgres. Confira a DATABASE_URL (passo 2) e se o
+serviço do banco está de pé no projeto. O log do deploy mostra em que etapa
+parou: procure por "[one-os] preparando o banco de dados...".
 
 **"Configuration error" na tela de login**
 Falta `AUTH_SECRET` ou `AUTH_URL`.
