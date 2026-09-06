@@ -40,16 +40,16 @@ const ACESSOS = [
   {
     email: process.env.ACESSO_1_EMAIL ?? "gabrieltobar@onevision.com",
     nome: "Gabriel Tobar",
-    cargo: "Fundador",
-    fundador: true,
+    cargo: "Sócio e Desenvolvedor",
+    fundador: false,
     // e-mail antigo, para renomear em vez de criar um usuário novo
     emailAnterior: "tobar.s.gabriell@gmail.com",
   },
   {
     email: process.env.ACESSO_2_EMAIL ?? "alissonmachado@onevision.com",
     nome: "Alisson Machado",
-    cargo: "Sócio",
-    fundador: false,
+    cargo: "Fundador",
+    fundador: true,
     emailAnterior: null,
   },
 ];

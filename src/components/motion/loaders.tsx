@@ -72,8 +72,8 @@ export function PageLoader({ label = "Carregando" }: { label?: string }) {
             <motion.span
               key={i}
               className="absolute rounded-full border border-brand/30"
-              initial={{ width: 48, height: 48, opacity: 0.6 }}
-              animate={{ width: 130, height: 130, opacity: 0 }}
+              initial={{ width: 120, height: 56, opacity: 0.6 }}
+              animate={{ width: 300, height: 130, opacity: 0 }}
               transition={{
                 duration: 1.8,
                 repeat: Infinity,
@@ -86,7 +86,7 @@ export function PageLoader({ label = "Carregando" }: { label?: string }) {
           animate={reduceMotion ? undefined : { scale: [1, 1.06, 1] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         >
-          <LogoMark size={52} />
+          <LogoMark size={34} />
         </motion.div>
       </div>
 

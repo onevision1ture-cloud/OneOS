@@ -28,13 +28,10 @@ export function LoginForm() {
         className="relative z-10 w-full max-w-[400px]"
       >
         <div className="glass rounded-2xl border border-white/[0.08] p-8 shadow-2xl shadow-black/50">
-          {/* marca */}
+          {/* marca: já traz o nome escrito, sem repetir em texto */}
           <div className="mb-8 flex flex-col items-center text-center">
-            <LogoMark size={54} />
-            <h1 className="mt-4 text-2xl font-semibold tracking-tight">
-              One<span className="text-brand">OS</span>
-            </h1>
-            <p className="mt-1.5 text-xs text-fg-muted">
+            <LogoMark size={44} />
+            <p className="mt-4 text-xs text-fg-muted">
               Acesso restrito à equipe Onevision
             </p>
           </div>

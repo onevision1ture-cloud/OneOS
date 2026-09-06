@@ -124,23 +124,14 @@ export function BootScreen({ once = true }: { once?: boolean }) {
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
             >
-              <LogoMark size={84} />
+              <LogoMark size={72} />
             </motion.div>
 
-            <motion.h1
-              className="mt-7 text-3xl font-semibold tracking-tight"
-              initial={{ y: 14, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.25, duration: 0.6 }}
-            >
-              One<span className="text-brand">OS</span>
-            </motion.h1>
-
             <motion.p
-              className="mt-2 text-[11px] font-medium uppercase tracking-[0.3em] text-fg-muted"
+              className="mt-5 text-[11px] font-medium uppercase tracking-[0.3em] text-fg-muted"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
+              transition={{ delay: 0.35, duration: 0.6 }}
             >
               Onevision1ture
             </motion.p>

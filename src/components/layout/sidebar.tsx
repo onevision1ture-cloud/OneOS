@@ -50,11 +50,9 @@ export function Sidebar({
 
   return (
     <aside className="relative z-30 hidden w-[244px] shrink-0 flex-col border-r border-line bg-surface-1 md:flex">
-      <div className="flex h-16 items-center gap-3 border-b border-line px-5">
+      {/* A marca já traz o nome escrito, então não repetimos em texto. */}
+      <div className="flex h-16 items-center border-b border-line px-5">
         <LogoMark size={30} animated={false} />
-        <span className="whitespace-nowrap text-lg font-semibold tracking-tight">
-          One<span className="text-brand">OS</span>
-        </span>
       </div>
 
       <nav className="flex-1 space-y-1 overflow-y-auto p-3">
