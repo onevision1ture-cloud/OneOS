@@ -17,7 +17,7 @@ Você provavelmente vai ver algo assim, do sistema antigo:
 
 | Variável | O que fazer |
 |---|---|
-| `DATABASE_URL` | **manter**, o sistema novo usa a mesma |
+| `DATABASE_URL` | **TROCAR** para um banco novo e vazio (veja abaixo) |
 | `NODE_ENV` | **manter** |
 | `GOOGLE_CALLBACK_URL` | pode deixar, não é usada |
 | `GOOGLE_CLIENT_ID` | pode deixar |
@@ -60,16 +60,23 @@ Ainda em **Variables**, clique em **New Variable** e adicione estas seis.
 > `${{Postgres.DATABASE_URL}}`; se o serviço de banco tiver outro nome no
 > seu projeto, use o nome real, por exemplo `${{postgres-abc.DATABASE_URL}}`.
 
-### O banco antigo atrapalha?
+### Use um banco vazio, só para este sistema
 
-Não. Conferi os dois: o sistema antigo usa tabelas em minúsculas (`users`,
-`clients`, `boards`, `tasks`) e o novo usa nomes com maiúscula (`"User"`,
-`"Client"`, `"Board"`, `"Card"`). No Postgres esses nomes são distintos, então
-os dois conjuntos convivem no mesmo banco sem se atrapalhar.
+**Não aponte a `DATABASE_URL` para um banco que já tem outro sistema dentro.**
 
-Ou seja: **os dados do sistema antigo continuam lá, intactos**, e o novo cria
-os dele ao lado. Se um dia quiser limpar os antigos, dá para fazer com calma,
-depois de confirmar que não precisa mais deles.
+O Prisma aplica o schema como verdade absoluta: qualquer tabela que exista no
+banco e não esteja no schema é removida, junto com os dados. Isso vale mesmo
+quando os nomes diferem só por maiúsculas.
+
+O sistema protege você disso: se encontrar tabelas desconhecidas, ele para
+antes de alterar qualquer coisa e mostra o que estaria em risco. Mas o
+caminho certo é o banco separado.
+
+**No Railway:** New → Database → Add PostgreSQL, e aponte a `DATABASE_URL`
+para ele com `${{Postgres.DATABASE_URL}}`.
+
+Assim o banco antigo fica intocado e você consulta os dados dele quando
+quiser.
 
 ### Gerar o AUTH_SECRET
 
@@ -159,6 +166,11 @@ github.com/onevision1ture-cloud/OneOS que só existe o sistema novo.
 **"Can't reach database server"**
 `DATABASE_URL` não aponta para o banco. Confira a sintaxe
 `${{NomeDoServico.DATABASE_URL}}`, com as duas chaves.
+
+**"PAREI: este banco tem tabelas de outro sistema"**
+A DATABASE_URL aponta para um banco que já tem outro sistema dentro. Crie um
+Postgres novo no Railway (New → Database → Add PostgreSQL) e aponte a
+variável para ele. O banco antigo fica intacto.
 
 **Login diz que não consegue falar com o banco**
 O sistema não alcança o Postgres. Confira a DATABASE_URL (passo 2) e se o
