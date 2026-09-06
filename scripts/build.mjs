@@ -1,27 +1,25 @@
 /**
  * Compila o One OS.
  *
- * Gera o cliente do Prisma e depois compila o Next.
+ * O cliente do Prisma já vem versionado em `src/generated/prisma`, e no
+ * Prisma 7 ele é portátil (a conexão vem de um driver adapter, não de um
+ * binário compilado para o sistema). Então o `prisma generate` aqui é só
+ * uma atualização de cortesia: se falhar, o build segue com o cliente que
+ * já está no repositório.
  *
- * O detalhe importante: serviços de hospedagem como o Railway injetam as
- * variáveis de ambiente só quando o sistema roda, não durante o build. Mas a
- * CLI do Prisma carrega o prisma.config.ts em qualquer comando, inclusive no
- * generate, que nem toca no banco.
- *
- * Para o build nunca depender disso, definimos aqui uma conexão de fachada
- * quando não há nenhuma. Ela só existe dentro deste processo e serve apenas
- * para o arquivo de configuração carregar; nenhuma consulta é feita.
+ * Isso importa porque a CLI do Prisma carrega o prisma.config.ts em qualquer
+ * comando, e serviços de hospedagem injetam as variáveis de ambiente apenas
+ * em runtime. Deixar o generate obrigatório fazia o build inteiro depender
+ * de uma variável que não existe naquele momento.
  */
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 
-// Marcador para conferir, no log do deploy, qual versão do código foi usada.
-console.log("[build] VERSAO DO BUILD: 2026-09-06-b (scripts/build.mjs)");
+console.log("[build] One OS · build 2026-09-06-c");
 
 const ambiente = { ...process.env };
 
 // No computador as variáveis moram no .env; em produção vêm do serviço.
-// Lemos o arquivo quando ele existe, só para a mensagem abaixo fazer sentido.
 if (existsSync(".env")) {
   for (const linha of readFileSync(".env", "utf8").split("\n")) {
     const par = linha.match(/^\s*([A-Z_][A-Z0-9_]*)\s*=\s*"?([^"\n]*)"?\s*$/i);
@@ -29,11 +27,10 @@ if (existsSync(".env")) {
   }
 }
 
+// Conexão de fachada só para o prisma.config.ts carregar. Nenhuma consulta
+// é feita durante o build.
 if (!ambiente.DATABASE_URL) {
   ambiente.DATABASE_URL = "postgresql://build:build@localhost:5432/build";
-  console.log(
-    "[build] sem DATABASE_URL: usando uma conexão de fachada só para gerar o cliente.",
-  );
 }
 if (!ambiente.DIRECT_URL) ambiente.DIRECT_URL = ambiente.DATABASE_URL;
 
@@ -49,15 +46,25 @@ function rodar(comando, args) {
   });
 }
 
+// Etapa opcional: mantém o cliente em dia com o schema.
 const generate = await rodar("npx", [
   "prisma",
   "generate",
   "--schema=prisma/schema.prisma",
 ]);
+
 if (generate !== 0) {
-  console.error("[build] falhou ao gerar o cliente do Prisma.");
-  process.exit(1);
+  console.log(
+    "[build] não atualizei o cliente do Prisma; usando o que está no repositório.",
+  );
 }
 
+// Etapa que realmente importa.
 const next = await rodar("npx", ["next", "build"]);
-process.exit(next);
+
+if (next !== 0) {
+  console.error("[build] a compilação falhou.");
+  process.exit(next);
+}
+
+console.log("[build] pronto.");
