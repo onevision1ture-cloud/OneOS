@@ -3,19 +3,21 @@ import path from "node:path";
 import { defineConfig } from "prisma/config";
 
 /**
- * Conexão usada pelos comandos da CLI (db push, migrate, seed, studio).
+ * Configuração dos comandos da CLI do Prisma (db push, migrate, seed, studio).
+ *
+ * A conexão é lida direto de `process.env`, e nunca com o helper `env()` do
+ * Prisma: aquele exige a variável no instante em que este arquivo carrega, o
+ * que quebra o `prisma generate` durante o build. No Railway as variáveis só
+ * existem em runtime, e o build falhava com
+ * "PrismaConfigEnvError: Cannot resolve environment variable: DATABASE_URL".
  *
  * `DIRECT_URL` tem prioridade: em bancos com pooler (Supabase, Neon), o modo
- * transaction não aceita os comandos de migration, e a conexão direta sim.
+ * transaction não aceita comandos de migration, mas a conexão direta aceita.
  *
- * A leitura é feita aqui, e não com o helper `env()` do Prisma, porque aquele
- * exige a variável no momento em que o arquivo carrega. Isso quebra o
- * `prisma generate` durante o build, que só lê o schema e não toca no banco:
- * no Railway as variáveis existem apenas em runtime, e o build falhava com
- * "PrismaConfigEnvError: Cannot resolve environment variable: DATABASE_URL".
+ * Quando nenhuma das duas existe, a string fica vazia. Comandos que não tocam
+ * no banco (como o generate) seguem normalmente; os que precisam falham com a
+ * mensagem do próprio Prisma, dizendo qual variável configurar.
  */
-const conexao = process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "";
-
 export default defineConfig({
   schema: path.join("prisma", "schema.prisma"),
   migrations: {
@@ -23,8 +25,6 @@ export default defineConfig({
     seed: "tsx prisma/seed.ts",
   },
   datasource: {
-    // String vazia deixa o generate passar; os comandos que precisam de banco
-    // falham com a mensagem do próprio Prisma se a variável estiver faltando.
-    url: conexao,
+    url: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? "",
   },
 });
