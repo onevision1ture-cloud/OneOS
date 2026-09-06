@@ -1,0 +1,17 @@
+# Diz ao Railway qual Node usar.
+#
+# Sem isto ele escolhe o padrão dele (Node 18), que é velho demais:
+# Next 16 exige >=20.9 e Prisma 7 exige >=20.19, e a instalação falha
+# com "Prisma only supports Node.js versions 20.19+, 22.12+, 24.0+".
+
+[phases.setup]
+nixPkgs = ["nodejs_22"]
+
+[phases.install]
+cmds = ["npm ci --include=dev"]
+
+[phases.build]
+cmds = ["npm run build"]
+
+[start]
+cmd = "npm run start"
