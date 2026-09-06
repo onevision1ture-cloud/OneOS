@@ -157,6 +157,10 @@ versão que funcionou. Abra **Deployments**, veja o log do deploy vermelho e
 corrija o erro apontado lá. Não é o GitHub: confira em
 github.com/onevision1ture-cloud/OneOS que só existe o sistema novo.
 
+**"PrismaConfigEnvError: Cannot resolve environment variable: DATABASE_URL"**
+Corrigido no projeto: o build não precisa mais de variáveis de ambiente.
+Se voltar, o repositório está desatualizado no Railway; force um Redeploy.
+
 **"Can't reach database server"**
 `DATABASE_URL` não aponta para o banco. Confira a sintaxe
 `${{NomeDoServico.DATABASE_URL}}`, com as duas chaves.
