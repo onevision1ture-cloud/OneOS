@@ -9,36 +9,51 @@ vai puxar o código novo sozinho no próximo deploy. O que muda são as
 
 ---
 
-## 1. Limpar as variáveis antigas
+## 1. As variáveis que já existem
 
 No Railway, abra o serviço do OneOS e vá em **Variables**.
 
-Estas eram do sistema antigo e não servem mais. Pode apagar:
+Você provavelmente vai ver algo assim, do sistema antigo:
 
-| Apagar | Por quê |
+| Variável | O que fazer |
 |---|---|
-| `SESSION_SECRET` | o sistema novo usa `AUTH_SECRET` |
-| `PORT` | o Next lê a porta do Railway sozinho |
+| `DATABASE_URL` | **manter**, o sistema novo usa a mesma |
+| `NODE_ENV` | **manter** |
+| `GOOGLE_CALLBACK_URL` | pode deixar, não é usada |
+| `GOOGLE_CLIENT_ID` | pode deixar |
+| `GOOGLE_CLIENT_SECRET` | pode deixar |
 
-Se houver outras que você não reconhece, deixe: variável sobrando não
-atrapalha, só polui.
+**Não precisa apagar nada.** Variável sobrando não atrapalha o sistema novo:
+ele só lê as que conhece. As três do Google eram do login antigo por conta
+Google, que o sistema novo não usa (ele tem tela de login própria).
+
+> As "8 variables added by Railway" que aparecem no rodapé são as que o
+> próprio Railway injeta (porta, domínio, etc). Não mexa nelas.
 
 ---
 
-## 2. Configurar as variáveis novas
+## 2. Adicionar as variáveis novas
 
-Ainda em **Variables**, adicione:
+Ainda em **Variables**, clique em **New Variable** e adicione estas seis.
+`DATABASE_URL` já existe, então não precisa criar de novo.
 
 | Variável | Valor |
 |---|---|
-| `DATABASE_URL` | `${{Postgres.DATABASE_URL}}` |
-| `DIRECT_URL` | `${{Postgres.DATABASE_URL}}` |
+| `DIRECT_URL` | copie o mesmo valor que está em `DATABASE_URL` |
 | `AUTH_SECRET` | gere no passo abaixo |
 | `AUTH_URL` | a URL pública do serviço (passo 4) |
 | `SEED_ADMIN_EMAIL` | `alissonmachado@onevision.com` |
 | `SEED_ADMIN_PASSWORD` | a senha que vocês vão usar |
 | `SEED_ADMIN_NAME` | `Alisson Machado` |
 | `ACESSO_SENHA_PADRAO` | a mesma senha acima |
+
+> **Como copiar o `DATABASE_URL`:** clique nos três pontos ao lado dela e
+> escolha "Copy". Se o valor aparecer como `${{Postgres.DATABASE_URL}}`, cole
+> exatamente isso em `DIRECT_URL`. Se aparecer a conexão completa
+> (`postgresql://...`), cole a conexão.
+>
+> As duas apontam para o mesmo banco: o Prisma usa uma para o app e outra
+> para criar as tabelas.
 
 > **`DATABASE_URL` provavelmente já existe** apontando para o Postgres do
 > sistema antigo. Pode manter. Só confira se o valor é
