@@ -15,6 +15,9 @@
 import { spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 
+// Marcador para conferir, no log do deploy, qual versão do código foi usada.
+console.log("[build] VERSAO DO BUILD: 2026-09-06-b (scripts/build.mjs)");
+
 const ambiente = { ...process.env };
 
 // No computador as variáveis moram no .env; em produção vêm do serviço.
